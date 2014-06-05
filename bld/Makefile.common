@@ -1,0 +1,22 @@
+CC		:= gcc
+CFLAGS	:= -g -Wall -ggdb3 -Werror
+#OPT	:= -O4
+EE		:= $(CC) -E
+LST		:= $(CC) -c $(CFLAGS) -Wa,-a,-ad 
+LDFLAGS	:= -lpthread
+
+# cancel implicit program rule
+%.o: %.c $(DEPS)
+	@echo $(CC) $(OPT) $(CFLAGS) $< 
+	@$(CC) $(OPT) $(INCLUDES) $(CFLAGS) -c -o $@ $<
+
+%.i: %.c
+	$(EE) $(OPT) $(CFLAGS) $< > $@
+
+%.lst: %.c
+	$(LST) $(OPT) $< > $@
+
+.PHONY: clean
+clean:
+	@rm -f  $(OBJS) *~
+

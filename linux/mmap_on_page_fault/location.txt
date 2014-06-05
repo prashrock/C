@@ -1,0 +1,2 @@
+akolli_nos4_l3_dev_05
+/vobs/projects/springboard/fabos/bccb/sys/dev/mmap
