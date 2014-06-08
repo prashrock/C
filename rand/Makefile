@@ -1,4 +1,3 @@
-COMMON_ROOT = ~/sample_progs
 
 INCLUDES = \
 	-I $(COMMON_ROOT)/queue	\
@@ -33,3 +32,4 @@ reservoir_rand_sample: $(RESERV_OBJS)
 	@echo $@
 	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
 	@echo "--------------------------------------------------"
+

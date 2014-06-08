@@ -1,4 +1,4 @@
-COMMON_ROOT = ~/sample_progs
+COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	dyn_subset_sum dyn_fibonacci bit_test					        \
 	reservoir_rand_sample dist_elect_test
@@ -7,48 +7,48 @@ EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 all: $(EXES) etags
 
 stack_test:
-	@$(MAKE) -f $(COMMON_ROOT)/stack/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/stack/Makefile COMMON_ROOT="$(COMMON_ROOT)"  $@
 
 queue_test:
-	@$(MAKE) -f $(COMMON_ROOT)/queue/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/queue/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 str_test:
-	@$(MAKE) -f $(COMMON_ROOT)/string/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/string/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 math_test:
-	@$(MAKE) -f $(COMMON_ROOT)/math/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/math/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 sort_test:
-	@$(MAKE) -f $(COMMON_ROOT)/sort/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/sort/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 dyn_subset_sum:
-	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 dyn_fibonacci:
-	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 tree_test:
-	@$(MAKE) -f $(COMMON_ROOT)/tree/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/tree/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 bit_test:
-	@$(MAKE) -f $(COMMON_ROOT)/bit_ops/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/bit_ops/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 reservoir_rand_sample:
-	@$(MAKE) -f $(COMMON_ROOT)/rand/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/rand/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 dist_elect_test:
-	@$(MAKE) -f $(COMMON_ROOT)/distributed/Makefile $@
+	@$(MAKE) -f $(COMMON_ROOT)/distributed/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 clean:
 	rm -f $(EXES) TAGS 
-	$(MAKE) -C $(COMMON_ROOT)/stack/ clean
-	$(MAKE) -C $(COMMON_ROOT)/queue/ clean
-	$(MAKE) -C $(COMMON_ROOT)/string/ clean
-	$(MAKE) -C $(COMMON_ROOT)/math/ clean
-	$(MAKE) -C $(COMMON_ROOT)/dyn_prog/ clean
-	$(MAKE) -C $(COMMON_ROOT)/bit_ops/ clean
-	$(MAKE) -C $(COMMON_ROOT)/rand/ clean
-	$(MAKE) -C $(COMMON_ROOT)/distributed/ clean
+	$(MAKE) -C $(COMMON_ROOT)/stack/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/queue/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/string/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/math/  COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/dyn_prog/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/bit_ops/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/rand/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/distributed/ COMMON_ROOT="$(COMMON_ROOT)" clean
 
 etags:
 	@echo "--------------------------------------------------"

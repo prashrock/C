@@ -1,4 +1,3 @@
-COMMON_ROOT = ~/sample_progs
 
 INCLUDES = \
 	-I $(COMMON_ROOT)/string \
@@ -28,3 +27,4 @@ str_test: $(OBJS)
 	@echo $@
 	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
 	@echo "--------------------------------------------------"
+

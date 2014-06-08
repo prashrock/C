@@ -1,4 +1,3 @@
-COMMON_ROOT = ~/sample_progs
 
 INCLUDES = \
 	-I $(COMMON_ROOT)/stack	\
@@ -24,3 +23,4 @@ stack_test: $(OBJS)
 	@echo $@
 	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
 	@echo "--------------------------------------------------"
+

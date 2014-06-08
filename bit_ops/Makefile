@@ -1,4 +1,3 @@
-COMMON_ROOT = ~/sample_progs
 
 INCLUDES = \
 	-I $(COMMON_ROOT)/string \
