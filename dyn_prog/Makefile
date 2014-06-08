@@ -15,9 +15,14 @@ DYN_FIB_OBJS = \
 	$(COMMON_ROOT)/dyn_prog/dyn_fibonacci.o \
 	$(COMMON_ROOT)/utils/parser.o \
 
+DYN_STR_MIN_EDIT_OBJS = \
+	$(COMMON_ROOT)/dyn_prog/dyn_str_min_edit_distance.o \
+	$(COMMON_ROOT)/utils/parser.o \
+
 DEPS = \
 	$(COMMON_ROOT)/utils/compiler_api.h \
 	$(COMMON_ROOT)/utils/scan_utils.h \
+	$(COMMON_ROOT)/utils/print_utils.h \
 	$(COMMON_ROOT)/utils/multi_thread.h \
 	$(COMMON_ROOT)/stack/dy_stack.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \
@@ -26,7 +31,7 @@ DEPS = \
 	$(COMMON_ROOT)/math/math_misc.h \
 	$(COMMON_ROOT)/math/math_prime.h \
 
-OBJS = $(DYN_SUBSUM_OBJS) $(DYN_FIB_OBJS)
+OBJS = $(DYN_SUBSUM_OBJS) $(DYN_FIB_OBJS) $(DYN_STR_MIN_EDIT_OBJS)
 
 #order is important to have dependencies work, declare DEPS before include
 include $(COMMON_ROOT)/bld/Makefile.common
@@ -39,6 +44,12 @@ dyn_subset_sum: $(DYN_SUBSUM_OBJS)
 	@echo "--------------------------------------------------"
 
 dyn_fibonacci: $(DYN_FIB_OBJS)
+	@echo "--------------------------------------------------"
+	@echo $@
+	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	@echo "--------------------------------------------------"
+
+dyn_str_min_edit_dist: $(DYN_STR_MIN_EDIT_OBJS)
 	@echo "--------------------------------------------------"
 	@echo $@
 	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
