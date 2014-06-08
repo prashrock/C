@@ -1,6 +1,6 @@
 COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
-	dyn_subset_sum dyn_fibonacci bit_test					        \
+	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	reservoir_rand_sample dist_elect_test
 .PHONY: all clean etags $(EXES)
 
@@ -25,6 +25,9 @@ dyn_subset_sum:
 	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 dyn_fibonacci:
+	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
+dyn_str_min_edit_dist:
 	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 tree_test:
@@ -72,5 +75,4 @@ define FIND_HEADERS_CMD
 	ls /usr/include/*.h; \
 )
 endef
-
 
