@@ -26,6 +26,8 @@ DEPS = \
 	$(COMMON_ROOT)/math/math_misc.h \
 	$(COMMON_ROOT)/math/math_prime.h \
 
+OBJS = $(MATH_OBJS) $(SUBSUM_OBJS)
+
 #order is important to have dependencies work, declare DEPS before include
 include $(COMMON_ROOT)/bld/Makefile.common
 

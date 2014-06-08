@@ -41,13 +41,15 @@ dist_elect_test:
 
 clean:
 	rm -f $(EXES) TAGS 
-	$(MAKE) -C $(COMMON_ROOT)/stack/ COMMON_ROOT="$(COMMON_ROOT)" clean
-	$(MAKE) -C $(COMMON_ROOT)/queue/ COMMON_ROOT="$(COMMON_ROOT)" clean
-	$(MAKE) -C $(COMMON_ROOT)/string/ COMMON_ROOT="$(COMMON_ROOT)" clean
-	$(MAKE) -C $(COMMON_ROOT)/math/  COMMON_ROOT="$(COMMON_ROOT)" clean
-	$(MAKE) -C $(COMMON_ROOT)/dyn_prog/ COMMON_ROOT="$(COMMON_ROOT)" clean
-	$(MAKE) -C $(COMMON_ROOT)/bit_ops/ COMMON_ROOT="$(COMMON_ROOT)" clean
-	$(MAKE) -C $(COMMON_ROOT)/rand/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/stack/       COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/queue/       COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/string/      COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/math/        COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/sort/        COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/dyn_prog/    COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/tree/        COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/bit_ops/     COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/rand/        COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/distributed/ COMMON_ROOT="$(COMMON_ROOT)" clean
 
 etags:

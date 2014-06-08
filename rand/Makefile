@@ -23,6 +23,8 @@ DEPS = \
 	$(COMMON_ROOT)/string/string_api.h \
 	$(COMMON_ROOT)/tree/bst.h \
 
+OBJS = $(RESERV_OBJS)
+
 #order is important to have dependencies work, declare DEPS before include
 include $(COMMON_ROOT)/bld/Makefile.common
 
