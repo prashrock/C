@@ -32,7 +32,11 @@ static inline bool input_integer(int *n)
 	else return false;
 }
 
-/* Use generic input API and trim '\n' in the end */
+/* Use generic input API and trim '\n' in the end       *
+ * This implementation is preferable when upper bound   *
+ * of input size is known in advance.                   *
+ * If input size upper bound is unknown, Dynamic Queue  *
+ * API is a better API (ex: "str_lcs_test")             */
 static inline int input_string(char c[], int max_len)
 {
 	int len = input_generic_api(c, max_len);
