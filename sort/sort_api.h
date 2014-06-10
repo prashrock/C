@@ -19,7 +19,8 @@ enum SORT_TYPE {
 	SELECTION_SORT = 0,
 	INSERTION_SORT,
 	SHELL_SORT,
-	MERGE_SORT,
+	MERGE_SORT_RECURSE,
+	MERGE_SORT_ITERATE,
 	INVALID_SORT,
 };
 
@@ -28,7 +29,8 @@ static const char *sort_name[] =
 	"Selection Sort",
 	"Insertion Sort",
 	"Shell Sort",
-	"Merge Sort",
+	"Merge Sort - recurse",
+	"Merge Sort - iterate",
 };
 
 static inline bool sort_api(enum SORT_TYPE st,
@@ -46,7 +48,10 @@ static inline bool sort_api(enum SORT_TYPE st,
 	case SHELL_SORT:
 		shell_sort(objs, cnt, def_shell_sort_inc_comp);
 		break;
-	case MERGE_SORT:
+	case MERGE_SORT_RECURSE:
+		merge_sort_recurse(objs, cnt, def_ms_inc_comp);
+		break;
+	case MERGE_SORT_ITERATE:
 		merge_sort(objs, cnt, def_ms_inc_comp);
 		break;
 	default:
