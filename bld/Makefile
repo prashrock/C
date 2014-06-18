@@ -1,7 +1,7 @@
 COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
-	reservoir_rand_sample dist_elect_test
+	reservoir_rand_sample dist_elect_test ipc_socket_test
 .PHONY: all clean etags $(EXES)
 
 all: $(EXES) etags
@@ -42,6 +42,9 @@ reservoir_rand_sample:
 dist_elect_test:
 	@$(MAKE) -f $(COMMON_ROOT)/distributed/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
+ipc_socket_test:
+	@$(MAKE) -f $(COMMON_ROOT)/IPC/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
 clean:
 	rm -f $(EXES) TAGS 
 	$(MAKE) -C $(COMMON_ROOT)/stack/       COMMON_ROOT="$(COMMON_ROOT)" clean
@@ -54,6 +57,7 @@ clean:
 	$(MAKE) -C $(COMMON_ROOT)/bit_ops/     COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/rand/        COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/distributed/ COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/IPC/         COMMON_ROOT="$(COMMON_ROOT)" clean
 
 etags:
 	@echo "--------------------------------------------------"
