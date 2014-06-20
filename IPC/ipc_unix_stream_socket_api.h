@@ -1,3 +1,5 @@
+#ifndef _IPC_UNIX_STREAM_SOCKET_API_
+#define _IPC_UNIX_STREAM_SOCKET_API_
 #include <stdio.h>
 #include <stdbool.h>          /* bool, true, false */
 #include <pthread.h>          /* Pthreads library */
@@ -115,3 +117,4 @@ static inline bool destroy_unix_stream_socket(int sock)
 	return true;
 }
 
+#endif //_IPC_UNIX_STREAM_SOCKET_API_

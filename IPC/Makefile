@@ -8,6 +8,7 @@ INCLUDES = \
 
 IPC_SOCKET_OBJS = \
 	$(COMMON_ROOT)/IPC/ipc_socket_test.o \
+	$(COMMON_ROOT)/utils/multi_thread.o \
 
 DEPS = \
 	$(COMMON_ROOT)/IPC/ipc_unix_stream_socket_api.h \
@@ -17,6 +18,8 @@ DEPS = \
 	$(COMMON_ROOT)/stack/dy_stack.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \
 	$(COMMON_ROOT)/utils/parser.h \
+	$(COMMON_ROOT)/utils/multi_thread.h \
+	$(COMMON_ROOT)/utils/terminal_utils.h \
 
 OBJS = $(IPC_SOCKET_OBJS)
 

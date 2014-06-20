@@ -5,16 +5,34 @@
 #include <stdlib.h>         /* atoi  */
 #include <limits.h>         /* INT_MAX */
 #include "compiler_api.h"   /* unlikely */
+#include "terminal_utils.h" /* termios_init()  */
 
 #define MAX_INT_DIGITS (10) /* 4 Billion = 10 Digits */
 
+/* Disabled buffered IO - i.e., dont wait for '\n' to    *
+ * read a char. After input, enable buffered IO back     */
+static inline char getch()
+{
+	char ch;
+	termios_init(true);
+	ch = fgetc(stdin);
+	termios_reset();
+	return ch;
+}
+	
 /* Expects a dynamic container if max_len == -1           *
+ * If single char is requested, automatically use TERMIO  *
+ * settings to not wait for \n                            *
  * Otherwise inputs max_len-1 characters and appends (\0) *
  * Returns -1 upon failure and strlen upon success        */
 static inline int input_generic_api(char c[], int max_len)
 {
 	int i = 0;
 	if(max_len == -1) max_len = INT_MAX;
+	else if(max_len == 1){
+		c[0] = getchar();
+		return max_len;
+	}
 	while((c[i++] = getchar()) != '\n') if(i > max_len-1) break;
 	c[i] = '\0';
 	if(c[0] == 0 || c[0] == '\n') return -1;
