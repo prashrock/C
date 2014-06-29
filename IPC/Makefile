@@ -14,6 +14,7 @@ DEPS = \
 	$(COMMON_ROOT)/IPC/ipc_unix_stream_socket_api.h \
 	$(COMMON_ROOT)/utils/compiler_api.h \
 	$(COMMON_ROOT)/utils/scan_utils.h \
+	$(COMMON_ROOT)/utils/print_utils.h \
 	$(COMMON_ROOT)/utils/multi_thread.h \
 	$(COMMON_ROOT)/stack/dy_stack.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \

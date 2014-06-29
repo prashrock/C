@@ -24,7 +24,7 @@
 #include "selection_sort.h"   /* Selection sort API's */
 #include "insertion_sort.h"   /* Insertion sort API's */
 #include "shell_sort.h"       /* Shell sort API's */
-#include "merge_sort.h"       /* Merge sort API's */
+#include "merge_sort.h"       /* Merge sort API's + inversion cnt API */
 #include "sort_api.h"         /* Wrapper API's around sort */
 dq_t *dyq;
 dq_stats_t dq_stat_val;
@@ -103,17 +103,20 @@ static void cmp_sort_test(unsigned long long n)
 	enum SORT_TYPE j, orig = sort_type;
 	enum SORT_TYPE begin = SHELL_SORT;//SELECTION_SORT;
 	unsigned long long i = 10;
-	printf("\n|----------------------------------------------|\n");
-	printf("Cnt\t\t\t");
-	for(j = begin; j < INVALID_SORT; j++)
-		printf("%13s ",sort_name[j]);
-	printf("\n|----------------------------------------------|\n");
+	printf("\n|-------------------------------------------------------|\n");
+	printf("  %8s  ", "Count");
+	for(j = begin; j < INVALID_SORT; j++){
+		if(j == MERGE_SORT_RECURSE_INV_CNT) continue;
+		printf("%12s\t",sort_name_abbrv[j]);
+	}
+	printf("\n|-------------------------------------------------------|\n");
 	for(; i <= n; i *= 10)
 	{
-		printf("%10llu\t", i);
+		printf("%10llu", i);
 		fflush(stdout);
 		for(j = begin; j < INVALID_SORT; j++)
 		{
+			if(j == MERGE_SORT_RECURSE_INV_CNT) continue;
 			sort_type = j;
 			rand_sort_test(i, false, false);
 			printf("  ");
@@ -127,13 +130,13 @@ static void cmp_sort_test(unsigned long long n)
 static inline void print_sort_mode_table()
 {
 	printf("\tBelow is a list of supported sort types:\n");
-	printf("\t|------------------------------|\n");
-	printf("\t|                Name -- Mode  |\n");
-	printf("\t|------------------------------|\n");
+	printf("\t|----------------------------------------|\n");
+	printf("\t|                          Name -- Mode  |\n");
+	printf("\t|----------------------------------------|\n");
 	enum SORT_TYPE i;
 	for(i = 0; i != INVALID_SORT; i++)
-		printf("\t|%20s -- %4d  |\n",sort_name[i], i);
-	printf("\t|------------------------------|\n");
+		printf("\t|%30s -- %4d  |\n",sort_name[i], i);
+	printf("\t|----------------------------------------|\n");
 }
 	
 static void print_help_string()

@@ -12,6 +12,12 @@
 /* How many clients connected to one server */
 #define UNIX_STREAM_SOCKET_NUM_CLIENTS  1
 
+/* NOTES: (About AF_UNIX family of sockets)                            *
+ * AF_UNIX sockets are bi-directional (advantage over pipe/msg_queue)  *
+ * Client bind() unlike AF_INET, where krnl auto-binds sock to rnd port*
+ * write()/send() - will block if receiver buffer is full.             */
+
+
 /* Since sockaddr_un contains a path, its size is not constant         */
 static inline size_t get_sockaddr_un_size(struct sockaddr_un *addr)
 {

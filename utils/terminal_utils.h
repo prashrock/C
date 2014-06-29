@@ -1,9 +1,15 @@
 #ifndef _TERMIOS_CONTROL_API_
 #define _TERMIOS_CONTROL_API_
-#include <stdio.h>
-#include <limits.h>                /* CHAR_MAX */
-#include <stdbool.h>               /* bool, true, false */
-#include <termios.h>               /* TERM IO API */
+#include <stdio.h>          /* printf(3) */
+#include <limits.h>         /* CHAR_MAX */
+#include <stdbool.h>        /* bool, true, false */
+#include <termios.h>        /* TERM IO API */
+#include <stdlib.h>         /* exit(3) */
+#include <unistd.h>         /* fork(3), chdir(3), sysconf(3) */
+#include <signal.h>         /* signal(3) */
+#include <sys/stat.h>       /* umask(3) */
+#include <syslog.h>         /* syslog(3), openlog(3), closelog(3) */
+#include <string.h>         /* strlen */
 
 static struct termios old_term_attr, new_term_attr;
 
@@ -43,7 +49,7 @@ static inline void term_emphasized_print_str(const char str[])
 }
 
 /* Initialize new terminal i/o settings */
-void termios_init(bool echo)
+static inline void termios_init(bool echo)
 {
 	/* grab old terminal i/o settings */
 	tcgetattr(fileno(stdin), &old_term_attr);
@@ -63,9 +69,75 @@ void termios_init(bool echo)
 }
 
 /* Restore old terminal i/o settings */
-void termios_reset(void)
+static inline void termios_reset(void)
 {
 	tcsetattr(0, TCSANOW, &old_term_attr);
 }
+
+/* Need to figure out a way to re-route TTY to current PTY session */
+/* Not using perror, as stdout may be routed to /dev/null :)       */
+static inline bool daemonize(char* name, char* path, char *infile,
+							 char* outfile, char* errfile)
+{
+    /* Our process ID and Session ID */
+	pid_t pid, sid;
+	int fd;
+	
+	if(!path) { path="/tmp/"; }
+	if(!name) { name="medaemon"; }
+	
+	/* Force standard in to /dev/null if not instructed otherwise      *
+	 * If user wants to leave out STDOUT/STDERR as it is, honor that   */
+	if(!infile) { infile="/dev/null"; }
+
+    /* Fork off the parent process */
+	pid = fork();
+	if(pid < 0){ //failed fork
+		fprintf(stderr,"Error - Fork failed\n");
+		return false;
+	}
+	/* If PID is good, exit Parent process */
+	if(pid > 0){
+		printf("%s Daemon[%d] created successfully\n", name, pid);	
+		exit(EXIT_SUCCESS);
+	}
+	/* Change the file mode mask */
+	umask(0);
+
+	//open syslog
+	openlog(name, LOG_CONS | LOG_PID, LOG_DAEMON);
+
+	/* Create a new SID for the child process */
+	sid = setsid();
+	if (sid < 0) {
+		fprintf(stderr,"Error - failed setsid\n");
+		return false;
+	}
+	
+    /* Change the current working directory */
+	if ((chdir(path)) < 0) {
+		fprintf(stderr,"Error - failed chdir\n");
+		return false;
+	}
+
+    //catch/ignore signals -- need to revisit this...
+	//signal(SIGCHLD,SIG_IGN);
+	//signal(SIGHUP,SIG_IGN);
+
+	/* Close out the standard file descriptors and all open FD's */
+	close(STDIN_FILENO);
+	if(outfile) close(STDOUT_FILENO);
+	if(errfile) close(STDERR_FILENO);
+	for( fd = sysconf(_SC_OPEN_MAX); fd > STDERR_FILENO; --fd )
+		close(fd);
+	
+	//reopen stdin, stdout, stderr
+	stdin = fopen(infile,"r");                 //fd = 0
+	if(outfile) stdout = fopen(outfile,"w+");  //fd = 1
+	if(errfile) stderr = fopen(errfile,"w+");  //fd = 2
+	
+	return true;
+}
+
 
 #endif //_TERMIOS_CONTROL_API_

@@ -1,3 +1,4 @@
+//gcc -Wall -g -lpthread -o india_map india_map.c
 #include <stdio.h>
 int main()
 {

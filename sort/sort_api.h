@@ -21,6 +21,7 @@ enum SORT_TYPE {
 	SHELL_SORT,
 	MERGE_SORT_RECURSE,
 	MERGE_SORT_ITERATE,
+	MERGE_SORT_RECURSE_INV_CNT,
 	INVALID_SORT,
 };
 
@@ -31,6 +32,17 @@ static const char *sort_name[] =
 	"Shell Sort",
 	"Merge Sort - recurse",
 	"Merge Sort - iterate",
+	"Merge Sort - recurse + inv_cnt",
+};
+
+static const char *sort_name_abbrv[] = 
+{
+	"Select",
+	"Insert",
+	"Shell",
+	"Mrg(Rec)",
+	"Mrg(Itr)",
+	"Mrg(R+Inv)",
 };
 
 static inline bool sort_api(enum SORT_TYPE st,
@@ -53,6 +65,9 @@ static inline bool sort_api(enum SORT_TYPE st,
 		break;
 	case MERGE_SORT_ITERATE:
 		merge_sort(objs, cnt, def_ms_inc_comp);
+		break;
+	case MERGE_SORT_RECURSE_INV_CNT:
+		merge_sort_recurse_inversion_cnt(objs, cnt, def_ms_inc_comp);
 		break;
 	default:
 		printf("Error: Invalid sort type %d\n", st);

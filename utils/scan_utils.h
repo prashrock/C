@@ -2,12 +2,26 @@
 #define _SCAN_UTILS_API_
 #include <stdio.h>
 #include <stdbool.h>        /* bool, true, false */
-#include <stdlib.h>         /* atoi  */
+#include <stdlib.h>         /* atoi, EXIT_FAILURE */
+#include <string.h>         /* strlen */
 #include <limits.h>         /* INT_MAX */
 #include "compiler_api.h"   /* unlikely */
 #include "terminal_utils.h" /* termios_init()  */
 
 #define MAX_INT_DIGITS (10) /* 4 Billion = 10 Digits */
+
+/* Points to remember                                                  *
+ * = fgets() vs gets()                                                 *
+ *   = gets() does not allow you to specify length of buffer.          *
+ *   = gets() will devour newline at end of line.                      *
+ *   = fgets() allows specifying Stream + length of buffer (safer)     *
+ *   = fgets() will store \n at end of string, should trim manually    *
+ * = strtok is not multi-thread(MT) safe or re-entrant safe            *
+     = Not all Library calls are thread safe + re-entrancy safe.       *
+	 = strtok_r() is re-entrant (safe for concurrent access) + MT safe *
+	 = Re-entrant does not imply thread-safe (notes - CS_C_Semantics)  * 
+ */
+
 
 /* Disabled buffered IO - i.e., dont wait for '\n' to    *
  * read a char. After input, enable buffered IO back     */
@@ -19,7 +33,23 @@ static inline char getch()
 	termios_reset();
 	return ch;
 }
-	
+
+/* Trims '\n' at end of buffer. Can use with fgets()      */
+static inline bool input_trim_newline(char *s)
+{
+	int len;
+	if(s == NULL)  return false;
+    len = strlen(s);
+
+    /* First check if there is a newline at end of buffer */
+	if (len > 0 && s[len-1] == '\n') {
+		s[len-1] = '\0';
+		return true;
+	}
+	else
+		return false;
+}
+
 /* Expects a dynamic container if max_len == -1           *
  * If single char is requested, automatically use TERMIO  *
  * settings to not wait for \n                            *
@@ -64,9 +94,36 @@ static inline int input_string(char c[], int max_len)
 	}
 	return len;
 }
+
 static inline bool input_unsigned_integer(unsigned int *n)
 {
 	return input_integer((int *) n);
+}
+
+/* The popen() call opens a process by creating a pipe,  *
+ * forking, and invoking the shell(bourne shell on Linux)*
+ * The advantage to using popen() is that it will allow  *
+ * one to interrogate the results of the command issued. */
+/* Note:                                                 *
+ * = popen() is multi-thread safe as per documentation   *
+ * = system() is not multi-thread safe                   *
+ * = with multiple fork+pclose, wait() might get confused*/
+static inline bool exec_cmd_print_output(const char *cmd)
+{
+	FILE *fpipe;
+	char line[256];
+	if(!(fpipe = (FILE *) popen(cmd, "r")))
+	{
+		perror("Error - popen failed::");
+		return false;
+	}
+	printf("Info - Executing '%s' in CWD\n", cmd);
+	while(fgets(line, sizeof(line), fpipe))
+	{
+		printf("%s", line);
+	}
+	pclose(fpipe);
+	return true;
 }
 
 #endif //_SCAN_UTILS_API_
