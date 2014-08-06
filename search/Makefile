@@ -7,8 +7,8 @@ INCLUDES = \
 	-I $(COMMON_ROOT)/bit_ops \
 	-I $(COMMON_ROOT)/sort \
 
-SORT_ROTATED_ARRAY_SEARCH_OBJS = \
-	$(COMMON_ROOT)/search/binary_search_sorted_rotated_array.o \
+OBJS = \
+	$(COMMON_ROOT)/search/search_test.o \
 	$(COMMON_ROOT)/utils/parser.o \
 
 DEPS = \
@@ -27,15 +27,15 @@ DEPS = \
 	$(COMMON_ROOT)/sort/insertion_sort.h \
 	$(COMMON_ROOT)/sort/shell_sort.h \
 	$(COMMON_ROOT)/sort/merge_sort.h \
+	$(COMMON_ROOT)/search/binary_search.h \
 
-OBJS = $(SORT_ROTATED_ARRAY_SEARCH_OBJS)
 
 #order is important to have dependencies work, declare DEPS before include
 include $(COMMON_ROOT)/bld/Makefile.common
 LDFLAGS	+= -lrt
 
 # cancel implicit program rule
-binary_search_sorted_rotated_array: $(SORT_ROTATED_ARRAY_SEARCH_OBJS)
+search_test: $(OBJS)
 	@echo "--------------------------------------------------"
 	@echo $@
 	$(CC)  $(OPT) $(CFLAGS) $(LDFLAGS)  -o $@ $^

@@ -2,7 +2,7 @@ COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
-	binary_search_sorted_rotated_array
+	search_test
 .PHONY: all clean etags $(EXES)
 
 all: $(EXES) etags
@@ -46,7 +46,7 @@ dist_elect_test:
 ipc_socket_test:
 	@$(MAKE) -f $(COMMON_ROOT)/IPC/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
-binary_search_sorted_rotated_array:
+search_test:
 	@$(MAKE) -f $(COMMON_ROOT)/search/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 clean:
