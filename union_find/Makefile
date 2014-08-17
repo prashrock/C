@@ -3,6 +3,7 @@ INCLUDES = \
 	-I $(COMMON_ROOT)/stack	\
 	-I $(COMMON_ROOT)/utils	\
 	-I $(COMMON_ROOT)/string \
+	-I $(COMMON_ROOT)/bit_ops \
 	-I $(COMMON_ROOT)/union_find \
 
 OBJS = \
@@ -15,6 +16,7 @@ DEPS = \
 	$(COMMON_ROOT)/utils/multi_thread.h \
 	$(COMMON_ROOT)/utils/scan_utils.h \
 	$(COMMON_ROOT)/utils/parser.h \
+	$(COMMON_ROOT)/bit_ops/bit_ops.h \
 	$(COMMON_ROOT)/union_find/union_find.h \
 
 #order is important to have dependencies work, declare DEPS before include

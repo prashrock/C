@@ -7,7 +7,6 @@
 #include "string_api.h"    /* String utilities */
 #include "scan_utils.h"    /* input_integer */
 #include "union_find.h"    /* Union Find API  */
-#define MAX_COMPONENTS  10
 uf_t *uf;
 	
 static void print_help_string()
@@ -19,7 +18,7 @@ static void print_help_string()
 	printf("\t    find p - Find root of connected Component 'p'\n");
 	printf("\t union p q - Connect components 'p' and 'q'\n");
 	printf("\t conn  p q - Are 'p' and 'q' connected\n");
-	printf("\t         n - Print # Connected Components\n");
+	printf("\t         n - Print UF statistics\n");
 }
 
 static void multi_char_CLI(const char *c)
@@ -32,7 +31,7 @@ static void multi_char_CLI(const char *c)
 		if((space = my_strstr_with_strlen(c, " ")))
 		{
 			lp = atoi(space + 1);
-			root = uf_find(uf, lp);
+			root = uf_find(&uf, lp);
 			printf("Root of '%d' = %d\n", lp, root);
 		}
 	}
@@ -44,7 +43,7 @@ static void multi_char_CLI(const char *c)
 			if((space1 = my_strstr_with_strlen(space+1, " ")))
 			{
 				q = atoi(space1 + 1);
-				if(uf_union(uf, p, q))
+				if(uf_union(&uf, p, q))
 					printf("%d and %d have been connected\n", p, q);
 				else
 					printf("Error: %d and %d connect failed\n", p, q);
@@ -60,7 +59,7 @@ static void multi_char_CLI(const char *c)
 			if((space1 = my_strstr_with_strlen(space+1, " ")))
 			{
 				q = atoi(space1 + 1);
-				if(uf_is_connected(uf, p, q))
+				if(uf_is_connected(&uf, p, q))
 					printf("%d and %d are connected\n", p, q);
 				else
 					printf("%d and %d are NOT connected\n", p, q);
@@ -86,8 +85,7 @@ static void single_char_CLI(const char *c)
 		printf("\n");
 		break;
 	case 'n': case 'N':
-		printf("UF Element Cnt = %u Component Cnt = %u\n",
-			   uf_elem_count(uf), uf_cmp_count(uf));
+		uf_print_stats(uf);
 		break;
 	case '?':
 		print_help_string();
@@ -100,7 +98,8 @@ static void single_char_CLI(const char *c)
 int main()
 {
 	/* Assume create goes through fine, this is just a test-driver */
-	uf = uf_create(MAX_COMPONENTS);
+	uf = uf_create(0);
+	uf_set_size_unlimited(uf);
 	print_help_string();
 	handle_CLI(single_char_CLI, NULL, multi_char_CLI);
 	uf_destroy(uf);
