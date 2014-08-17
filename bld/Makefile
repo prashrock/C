@@ -2,7 +2,7 @@ COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
-	search_test
+	search_test union_find_test
 .PHONY: all clean etags $(EXES)
 
 all: $(EXES) etags
@@ -49,6 +49,9 @@ ipc_socket_test:
 search_test:
 	@$(MAKE) -f $(COMMON_ROOT)/search/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
+union_find_test:
+	@$(MAKE) -f $(COMMON_ROOT)/union_find/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
 clean:
 	rm -f $(EXES) TAGS 
 	$(MAKE) -C $(COMMON_ROOT)/stack/       COMMON_ROOT="$(COMMON_ROOT)" clean
@@ -63,6 +66,7 @@ clean:
 	$(MAKE) -C $(COMMON_ROOT)/distributed/ COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/IPC/         COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/search/      COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/union_find/  COMMON_ROOT="$(COMMON_ROOT)" clean
 
 etags:
 	@echo "--------------------------------------------------"

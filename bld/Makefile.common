@@ -10,8 +10,8 @@ LDFLAGS	:= -lpthread
 	@echo $(CC) $(OPT) $(CFLAGS) $< 
 	@$(CC) $(OPT) $(INCLUDES) $(CFLAGS) -c -o $@ $<
 
-%.i: %.c
-	$(EE) $(OPT) $(CFLAGS) $< > $@
+%.i: %.c $(DEPS)
+	$(EE) $(OPT) $(INCLUDES) $(CFLAGS) $< > $@
 
 %.lst: %.c
 	$(LST) $(OPT) $< > $@
