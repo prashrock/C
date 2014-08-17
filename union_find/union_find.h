@@ -57,7 +57,9 @@ static inline void uf_print_id_rank(uf_elem_t *x)
 /* Print the elements root ID alone                      */
 static inline void uf_print_id(uf_elem_t *x)
 { printf(" %d,", x->id); }
-
+/* Check if UF size is limited or unlimited              */
+static inline bool uf_is_size_unlimited(uf_t *uf)
+{ return ((uf->flags & UF_DS_SIZE_UNLIMITED_BITMASK)); }
 /*--------------------Internal Functions(Start)--------------------*/
 /* Create an empty UF  DS. #elems = align_pow2(elem_cnt) *
  * Initializes Union Find DS (no connections specified)  *
@@ -87,8 +89,7 @@ static inline void uf_destroy_impl(uf_t *uf)
 /* Dynamic Array size up implementation. If find() goes  *
  * outside array bounds and if unlimited size flag is    *
  * specified, resize up the container.                   */
-static inline uf_t *uf_resize_up_impl(uf_t *old_uf,
-									  unsigned int new_elem_cnt)
+static inline uf_t *uf_resize_up_impl(uf_t *old_uf, unsigned int new_elem_cnt)
 {
 	uf_t *new_uf = uf_create_impl(new_elem_cnt);
 	if(new_uf == NULL)
@@ -130,7 +131,7 @@ static inline int uf_find_impl(uf_t **uf_ptr, int p)
 	else if(p >= uf->elem_cnt)
 	{
 		/* Check for Dynamic resizing option             */
-		if((uf->flags & UF_DS_SIZE_UNLIMITED_BITMASK))
+		if(uf_is_size_unlimited(uf))
 		{
 			uf = uf_resize_up_impl(uf, p+1);
 			if(uf == NULL) goto uf_find_err;
@@ -247,7 +248,7 @@ static inline void uf_print_stats(uf_t *uf)
 	printf("#Components           = %10u\n",uf_comp_count(uf));
 	printf("#Find operations      = %10u\n",uf->stats.find_cnt);
 	printf("#Find errors          = %10u\n",uf->stats.find_err_cnt);
-	if((uf->flags & UF_DS_SIZE_UNLIMITED_BITMASK))
+	if(uf_is_size_unlimited(uf))
 	{
 		printf("#Resize up operations = %10u\n",uf->stats.resize_cnt);
 		printf("#Resize Up errors     = %10u\n",uf->stats.resize_err_cnt);
