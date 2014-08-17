@@ -88,7 +88,7 @@ static inline void uf_destroy_impl(uf_t *uf)
  * outside array bounds and if unlimited size flag is    *
  * specified, resize up the container.                   */
 static inline uf_t *uf_resize_up_impl(uf_t *old_uf,
-								   unsigned int new_elem_cnt)
+									  unsigned int new_elem_cnt)
 {
 	uf_t *new_uf = uf_create_impl(new_elem_cnt);
 	if(new_uf == NULL)
