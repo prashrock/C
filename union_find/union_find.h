@@ -12,7 +12,10 @@
 #define UF_DS_RESIZE_MULTIPLIER 2
 
 /* Union-Find DS for Dynamic Connectivity                *
- * Weighted Union-Find (QuickUnion with Path Compression)*
+ * Weighted QuickUnion by Rank with Path Compression     *
+ * Time Complexity of Union/Find/Is_Connected            *
+ * = O(log N) in worst case                              *
+ * = Inverse Ackermann complexity (amortized cost)       *
  * Notes on Implementation:                              *
  * + Can enable dynamic UF scaling with a run-time flag  *
  * + If UF Scaling disabled, 0 performace hit (no checks)*
