@@ -5,7 +5,8 @@ language: c
 
 compiler: gcc
 
+#- sudo apt-get install libc-dev glibc-devel
 before_install:
-- sudo apt-get install libc-dev glibc-devel
+- sudo yum install libc-dev glibc-devel libc-devel.i686 glibc-devel.i686
 
 install: make -C bld/
