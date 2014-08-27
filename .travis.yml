@@ -7,6 +7,6 @@ compiler: gcc
 
 #- sudo apt-get install libc-dev glibc-devel
 before_install:
-- sudo yum install libc-dev* glibc*
+- sudo apt-get install libc-dev* glibc*
 
 install: make -C bld/
