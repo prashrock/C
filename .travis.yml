@@ -6,6 +6,6 @@ language: c
 compiler: gcc
 
 before_install:
-- sudo apt-get install libgcc libgcc.i686
+- sudo apt-get install libc-dev glibc-devel
 
 install: make -C bld/
