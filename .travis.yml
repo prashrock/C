@@ -6,7 +6,7 @@ language: c
 compiler: gcc
 
 #- sudo apt-get install libc-dev glibc-devel
-before_install:
-- sudo apt-get install libpthread*
+#before_install:
+#- sudo apt-get install libpthread*
 
 install: make -C bld/
