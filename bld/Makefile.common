@@ -1,9 +1,9 @@
-CC		:= gcc
+CC	:= gcc
 CFLAGS	:= -g -Wall -ggdb3 -Werror
 #OPT	:= -O4
-EE		:= $(CC) -E
-LST		:= $(CC) -c $(CFLAGS) -Wa,-a,-ad 
-LDFLAGS	:= -lpthread
+EE	:= $(CC) -E
+LST	:= $(CC) -c $(CFLAGS) -Wa,-a,-ad 
+LDFLAGS	:= -lpthread -L /usr/lib/x86_64-linux-gnu
 
 # cancel implicit program rule
 %.o: %.c $(DEPS)
