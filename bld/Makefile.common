@@ -3,7 +3,7 @@ CFLAGS	:= -g -Wall -ggdb3 -Werror
 #OPT	:= -O4
 EE	:= $(CC) -E
 LST	:= $(CC) -c $(CFLAGS) -Wa,-a,-ad 
-LDFLAGS	:= -pthread -rt
+LDFLAGS	:= -L /usr/lib/x86_64-linux-gnu -pthread
 
 # cancel implicit program rule
 %.o: %.c $(DEPS)
