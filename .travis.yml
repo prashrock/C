@@ -9,5 +9,4 @@ compiler: gcc
 before_install:
 - cd bld
 
-install: make
 script: make
