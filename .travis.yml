@@ -25,5 +25,5 @@ addons:
 
 #What to do before compiling
 before_install: cd bld
-#script: make
-script: echo "Hi KP :)"
+script: make
+
