@@ -6,10 +6,11 @@ language: c
 compiler: gcc
 
 #What to do before compiling
-#before_install:
-#- cd bld
+before_install:
+- cd bld
 
 #script: make
+script: coverity_scan
 
 env:
   global:
