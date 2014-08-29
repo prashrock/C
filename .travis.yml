@@ -24,5 +24,6 @@ addons:
     branch_pattern: "master"
 
 #What to do before compiling
-#before_install: cd bld
+before_install: cd bld
 #script: make
+script: echo "Hi KP :)"
