@@ -17,7 +17,7 @@ addons:
       token: "TyshG46igXH6SERgKss8jg"
       description: "C Algorithms"
     notification_email: "prashrock@gmail.com"
-    build_command_prepend: "cd bld"
+    #build_command_prepend: "cd bld"
     # The command that will be added as an argument to "cov-build" to compile your project for analysis,
     build_command: "make"
     #   https://scan.coverity.com/faq#frequency
