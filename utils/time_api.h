@@ -1,17 +1,21 @@
 #ifndef _TIME_API_H_
 #define _TIME_API_H_
 #include <stdio.h>
-#include <stdlib.h>         /* atoi  */
-#include <stdbool.h>        /* bool, true, false */
-#include <string.h>         /* memset */
-#include <assert.h>         /* assert */
-#include <limits.h>         /* INT_MAX */
-#include <stdint.h>         /* uint64_t */
-#include <inttypes.h>       /* PRIu64 */
-#include <time.h>           /* timespec, clock_gettime */
-#include <errno.h>          /* errno */
+#include <stdlib.h>                /* atoi  */
+#include <stdbool.h>               /* bool, true, false */
+#include <string.h>                /* memset */
+#include <assert.h>                /* assert */
+#include <limits.h>                /* INT_MAX */
+#include <stdint.h>                /* uint64_t */
+#include <inttypes.h>              /* PRIu64 */
+#include <time.h>                  /* timespec, clock_gettime */
+#include <errno.h>                 /* errno */
 
-#define BILLION (1000000000LL)
+#include "compiler_api.h"          /* likely(), unlikely() */
+#include "atomic.h"                /* rdtsc */
+
+#define BILLION (1000000000ULL)
+#define NANOSEC_PER_SEC BILLION    /* 10^9 */
 
 struct time_api_t {
 	struct timespec start;
@@ -19,8 +23,18 @@ struct time_api_t {
 	uint64_t time_ns;
 };
 
+struct tsc_api_t {
+	uint64_t start;
+	uint64_t end;
+	uint64_t tsc_diff;
+};
+
 #define TIME_API_MAX_TIME_UNITS (sizeof(time_unit)/sizeof(char *))
 #define TIME_API_SECONDS_UNIT   (3)
+#ifndef TIME_API_MODE
+#define TIME_API_MODE           (CLOCK_REALTIME)
+#endif
+
 static const char *time_unit[] = 
 {
 	"ns",
@@ -31,10 +45,61 @@ static const char *time_unit[] =
 	"hours",
 };
 
+static inline uint64_t rdpmc(void)
+{
+	union {
+		uint64_t tsc_64;
+		struct {
+			uint32_t lo_32;
+			uint32_t hi_32;
+		};
+	} tsc;
+
+   /* ecx = 0x10000 corresponds to the physical TSC for VMware */
+	asm volatile("rdpmc" :
+				 "=a" (tsc.lo_32),
+				 "=d" (tsc.hi_32) :
+				 "c"(0x10000));
+	return tsc.tsc_64;
+}
+
+static inline uint64_t rdtscp(uint32_t cpu)
+{
+	union {
+		uint64_t tsc_64;
+		struct {
+			uint32_t lo_32;
+			uint32_t hi_32;
+		};
+	} tsc;
+	asm volatile ("rdtscp" :
+				  "=a" (tsc.lo_32),
+				  "=d" (tsc.hi_32),
+				  "=c" (cpu));
+	return tsc.tsc_64;
+	//return tsc.lo_32  | (((uint64_t )tsc.hi_32 ) << 32);
+}
+
+static inline uint64_t rdtsc(void)
+{
+	union {
+		uint64_t tsc_64;
+		struct {
+			uint32_t lo_32;
+			uint32_t hi_32;
+		};
+	} tsc;
+	asm volatile ("rdtsc" :
+				 "=a" (tsc.lo_32),
+				 "=d" (tsc.hi_32));
+	return tsc.tsc_64;
+	//return tsc.lo_32  | (((uint64_t )tsc.hi_32 ) << 32);
+}
+
 /* Translate timespec to ns */
 static inline uint64_t timespec_to_ns(struct timespec *val)
 {
-	return (uint64_t)val->tv_sec * BILLION + (uint64_t)val->tv_nsec;
+	return (uint64_t)val->tv_sec * NANOSEC_PER_SEC + (uint64_t)val->tv_nsec;
 }	
 /* Convert time in ns to bestfit time-unit and return respective string */
 static inline const char *convert_tv_ns_to_bestfit_time_unit(uint64_t *tv)
@@ -47,7 +112,8 @@ static inline const char *convert_tv_ns_to_bestfit_time_unit(uint64_t *tv)
 		i++;
 	}
 	/* covers s to hours */
-	while((*tv/60) && (i >= TIME_API_SECONDS_UNIT) && (i != TIME_API_MAX_TIME_UNITS-1))
+	while((*tv/60) && (i >= TIME_API_SECONDS_UNIT) &&
+		  (i != TIME_API_MAX_TIME_UNITS - 1))
 	{
 		*tv = *tv/60;
 		i++;
@@ -62,41 +128,46 @@ static inline void timespec_diff_calc(struct time_api_t *ta)
 	struct timespec *start = &ta->start;
 	struct timespec *end = &ta->end;
 	struct timespec diff;
-	if ((end->tv_nsec - start->tv_nsec) < 0)
-	{
+	if ((end->tv_nsec - start->tv_nsec) < 0) {
 		diff.tv_sec = end->tv_sec - start->tv_sec - 1;
-		diff.tv_nsec = BILLION + end->tv_nsec - start->tv_nsec;
+		diff.tv_nsec = NANOSEC_PER_SEC + end->tv_nsec - start->tv_nsec;
 	}
-	else
-	{
+	else {
 		diff.tv_sec = end->tv_sec - start->tv_sec;
 		diff.tv_nsec = end->tv_nsec - start->tv_nsec;
 	}
 	ta->time_ns = timespec_to_ns(&diff);
 }
+
 /* Below are the user API's for measuring and printing time */
 /* RT = The identifier of the systemwide realtime clock. */
 static inline bool rt_measure_start(struct time_api_t *ta, bool print)
 {
-	if(clock_gettime(CLOCK_REALTIME, &ta->start) != 0)
-	{
+	int ret = clock_gettime(TIME_API_MODE, &ta->start);
+	if(likely(ret == 0))
+		return true;
+	else {
 		if(print)
-			printf("Error:clock_gettime failed : '%s'\n", strerror(errno));
+			printf("Error:clock_gettime failed: '%s'\n", strerror(errno));
 		return false;
 	}
-	return true;
+
 }
+
 static inline bool rt_measure_end(struct time_api_t *ta, bool print)
 {
-	if(clock_gettime(CLOCK_REALTIME, &ta->end) != 0)
-	{
+	int ret = clock_gettime(TIME_API_MODE, &ta->end);
+	if(likely(ret == 0)) {
+		timespec_diff_calc(ta);
+		return true;
+	}
+	else {
 		if(print)
-			printf("Error:clock_gettime failed : '%s'\n", strerror(errno));
+			printf("Error:clock_gettime failed: '%s'\n", strerror(errno));
 		return false;
 	}
-	timespec_diff_calc(ta);
-	return true;
 }
+
 /* Prints the time elapsed in best possible unit */
 static inline void time_print_api(struct time_api_t *ta, const char *x)
 {
@@ -115,4 +186,71 @@ static inline void time_print_api(struct time_api_t *ta, const char *x)
 		printf("%10" PRIu64 " %3s", val, unit);
 	}
 }
+
+/* Below are the user API's for measuring and printing #clock cycles    *
+ * Note1: This API needs constant CPU frequency (Power Mgmt = disabled) *
+ * Note2: Either make both calls on 1 core or INVARIANT_TSC is available*
+ * Note3: Compile Time Barrier to ensure OPT does not affect measurement*/
+static inline void tsc_measure_start(struct tsc_api_t *tsc)
+{
+	tsc->start = rdtsc();
+	compile_mem_barrier();
+}
+
+static inline void  tsc_measure_end(struct tsc_api_t *tsc)
+{
+	compile_mem_barrier();
+	tsc->end = rdtsc();
+}
+
+/* Assuming starting value of TSC was not set manually to a huge number *
+ * TSC wrap-around would take ~292 years on a 2 Ghz machine             *
+ *     (#Years = 0xFFFFFFFF_FFFFFFFF / 2*10^9*60*60*24*365 = ~292)      *
+ * Therefore - TSC wrap-around is not a viable corner case              */
+static inline bool tsc_measure_calc(struct tsc_api_t *tsc, bool print)
+{
+	tsc->tsc_diff = tsc->end - tsc->start;
+	if(unlikely(tsc->end < tsc->start))
+	{
+		if(print)
+			printf("Error: Start TSC bigger than End TSC !\n");
+		return false;
+	}
+	return true;
+}
+
+/* This function is useful to gather statistics from a tight loop task *
+ * Given a function with appropriate start/end time/tsc markers, this  *
+ * function can be used to measure overall/per_loop/per_sec overhead   *
+ * for that specfic task.                                              *
+ * Tight loop provides an average to account for scheduling, timer and *
+ * other anamolies which might skew the task performance measurement   */
+void rt_task_statistics(uint64_t loop_cnt, struct time_api_t *time,
+							  struct tsc_api_t *tsc)
+{
+	uint64_t tsc_interval, time_interval;
+	uint64_t cycles_per_loop;
+	double calls_per_sec, cycles_per_sec, time_per_loop_in_ns;
+	double total_time_in_sec;
+
+	/* Measured Stats */
+	tsc_measure_calc(tsc, false);
+	tsc_interval  = tsc->tsc_diff;
+	time_interval = time->time_ns;
+
+	/* Inferred Stats */
+	total_time_in_sec  = ((double)time_interval / NANOSEC_PER_SEC);
+	time_per_loop_in_ns= ((double)time_interval / loop_cnt);
+	cycles_per_loop    = tsc_interval / loop_cnt;
+	calls_per_sec      = (double)loop_cnt / total_time_in_sec;
+	cycles_per_sec     = (double)tsc_interval / total_time_in_sec;
+
+	printf("   Total stats    : %.2f s  | %lu cycles(tsc)\n"
+		   "   Each loop stats: %.2f ns | %lu cycles(tsc)\n"
+		   "   Each sec stats : %.2f loops | %.2f cycles(tsc)\n",
+		   total_time_in_sec, tsc_interval,
+		   time_per_loop_in_ns, cycles_per_loop,
+		   calls_per_sec, cycles_per_sec);
+}
+
 #endif //_TIME_API_H_

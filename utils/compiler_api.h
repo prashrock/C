@@ -33,17 +33,6 @@
 			typeof (b) _b = (b);		 \
 			_a > _b ? _b : _a; })
 
-/* ---------- Atomic Locks and Barriers ---------- */
-/* Insert Multi-Processor lock prefix.                   *
- * Guarantees that LOAD and STORE operations generated   *
- * before the barrier occur before LOAD and              *
- * STORE operations generated after.                     */
-#define MPLOCKED "lock ;" 
-#define full_mem_barrier() __sync_synchronize()
-//asm volatile(MPLOCKED "addl $0,(%%esp)" : : : "memory")
-
-
-
 static inline void print_matrix(const int n, const int m, int x[][m])
 {
 	int i, j;

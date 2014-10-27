@@ -1,5 +1,5 @@
 CC	:= gcc
-CFLAGS	:= -g -Wall -ggdb3 -Werror
+CFLAGS	:= -g -Wall -ggdb3 -Werror -Wunused-function -fno-strict-aliasing  
 #OPT	:= -O4
 EE	:= $(CC) -E
 LST	:= $(CC) -c $(CFLAGS) -Wa,-a,-ad 
