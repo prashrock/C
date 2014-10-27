@@ -261,7 +261,7 @@ static inline void print_integer_in_binary(int n)
 	int sign_bit = 0;
 	int i = int_bit_count;
 	char str[int_bit_count + 1];
-	memset(str, '0', sizeof(str));
+	memset(str, 0, sizeof(str));
 	str[i--] = '\0';
 		
 	/* If n == 0, store '0' and avoid while loop */

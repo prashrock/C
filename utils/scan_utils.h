@@ -27,11 +27,16 @@
  * read a char. After input, enable buffered IO back     */
 static inline char getch()
 {
-	char ch;
+	char c = 0;
+	int char_int;
 	termios_init(true);
-	ch = fgetc(stdin);
+	char_int = fgetc(stdin);
 	termios_reset();
-	return ch;
+	if(char_int == EOF)
+		printf("Info: getch() got EOF\n");
+	else
+		c = (char)char_int;
+	return c;
 }
 
 /* Trims '\n' at end of buffer. Can use with fgets()      */

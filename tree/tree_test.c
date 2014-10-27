@@ -261,7 +261,7 @@ static void multi_char_CLI(const char *c)
 	}
 	else if(strncmp(c, "floor", strlen("floor")) == 0)
 	{
-		int key, floor_key;
+		int key = 0, floor_key;
 		if((space = my_strstr_with_strlen(c, " ")))
 			key = atoi(space + 1);
 		if(bst_get_floor_key(bst, key, &floor_key))
