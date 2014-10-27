@@ -131,6 +131,7 @@ static inline bool bst_node_get_key(bst_node_t *x, int *key)
 static inline bst_t *bst_init_impl()
 {
 	bst_t *bst = (bst_t *)malloc(sizeof(bst_t));
+	if(bst == NULL) return NULL;
 	memset(bst, 0, sizeof(bst_t));
 	return bst;
 }

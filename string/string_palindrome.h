@@ -42,7 +42,7 @@ static inline int expand_around_center(const char * const buf,
 static inline int longest_palindrome_substring(const char * const buf,
 											   int len)
 {
-	int i, j, start = -1, end, pal_len = -1;
+	int i, j, start = -1, end = -1, pal_len = -1;
 	if(buf == NULL || len == 0)   return 0;
 	for(i = 0; i < len; i++)
 	{

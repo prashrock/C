@@ -21,7 +21,8 @@
 /* Since sockaddr_un contains a path, its size is not constant         */
 static inline size_t get_sockaddr_un_size(struct sockaddr_un *addr)
 {
-	return offsetof(struct sockaddr_un, sun_path) + strlen(addr->sun_path);
+	return offsetof(struct sockaddr_un, sun_path)
+		+ strlen(addr->sun_path);
 }
 
 /* Create a UNIX Stream socket @ given path (need write permissions) and*
@@ -30,7 +31,7 @@ static inline bool create_unix_stream_socket(char *path, int *sock,
 											struct sockaddr_un *sock_st)
 {
 	if(!path || !sock || !sock_st){
-		printf("Error - invalid parameters to create_unix_stream_socket\n");
+		printf("Error - invalid param to create_unix_stream_socket\n");
 		return false;
 	}
 	
@@ -46,7 +47,7 @@ static inline bool create_unix_stream_socket(char *path, int *sock,
 	/* Initialize sockaddr_un structure */
 	sock_st->sun_family = AF_UNIX;
 	/* sockaddr_un.sun_path is 108, path should be less than 108B */
-	strncpy(sock_st->sun_path, path, sizeof(sock_st->sun_path));
+	strncpy(sock_st->sun_path, path, sizeof(sock_st->sun_path)-1);
 
 	return true;
 }
@@ -91,13 +92,15 @@ static inline bool listen_unix_stream_socket(int sock, int cnt)
 static inline bool accept_unix_stream_socket(int ssock, int *csock,
 										  struct sockaddr_un *csock_st)
 {
-	unsigned int len = get_sockaddr_un_size(csock_st);
+	unsigned int len;
 	if(!csock || !csock_st){
-		printf("Error - invalid parameters to accept_unix_stream_socket\n");
+		printf("Error - invalid param to accept_unix_stream_socket\n");
 		return false;
 	}
+	len = get_sockaddr_un_size(csock_st);
 	/* No check on ssock as its already done in bind  */
-	if ((*csock = accept(ssock, (struct sockaddr *)csock_st, &len)) < 0) {
+	if ((*csock = accept(ssock, (struct sockaddr *)csock_st, &len)) < 0)
+	{
 		perror("Error - accept_unix_stream_socket() - accept::");
 		return false;
 	}

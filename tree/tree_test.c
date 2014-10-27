@@ -235,7 +235,7 @@ static void multi_char_CLI(const char *c)
 	}
 	else if(strncmp(c, "lcp", strlen("lcp")) == 0)
 	{
-		int key1, key2, parent;
+		int key1 = 0, key2 = 0, parent;
 		if((space = my_strstr_with_strlen(c, " ")))
 			key1 = atoi(space + 1);
 		if((space = my_strstr_with_strlen(space+1, " ")))
@@ -305,7 +305,7 @@ static void multi_char_CLI(const char *c)
 	}
 	else if(strncmp(c, "print_key", strlen("print_key"))== 0)
 	{
-		int key;
+		int key = 0;
 		if((space = my_strstr_with_strlen(c, " ")))
 			key = atoi(space + 1);
 		print_bst_node_key_data(bst_get_node(bst, key));

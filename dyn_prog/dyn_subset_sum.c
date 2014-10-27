@@ -94,7 +94,10 @@ void subset_input_data()
 		else break;
 	}
 	printf("Please Enter Expected Sum:\n");
-	if(input_integer(&sum) == false) return;
+	if(input_integer(&sum) == false) {
+		dq_destroy(dq);
+		return;
+	}
 	printf("User entered %d integers and sum %d\n", dq_count(dq), sum);
 	dq_iterator(dq, dq_print_element);
 	printf("\n");
