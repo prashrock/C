@@ -2,7 +2,7 @@ COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
-	search_test union_find_test cmpxchg readtsc
+	search_test union_find_test cmpxchg readtsc mmap_test
 .PHONY: all clean etags $(EXES)
 
 all: $(EXES) etags
@@ -56,6 +56,9 @@ cmpxchg:
 	@$(MAKE) -f $(COMMON_ROOT)/micro_benchmarks/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 readtsc:
+	@$(MAKE) -f $(COMMON_ROOT)/micro_benchmarks/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
+mmap_test:
 	@$(MAKE) -f $(COMMON_ROOT)/micro_benchmarks/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 clean:

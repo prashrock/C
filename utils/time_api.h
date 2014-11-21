@@ -63,23 +63,25 @@ static inline uint64_t rdpmc(void)
 	return tsc.tsc_64;
 }
 
-static inline uint64_t rdtscp(uint32_t cpu)
-{
-	union {
-		uint64_t tsc_64;
-		struct {
-			uint32_t lo_32;
-			uint32_t hi_32;
-		};
-	} tsc;
-	asm volatile ("rdtscp" :
-				  "=a" (tsc.lo_32),
-				  "=d" (tsc.hi_32),
-				  "=c" (cpu));
-	return tsc.tsc_64;
-	//return tsc.lo_32  | (((uint64_t )tsc.hi_32 ) << 32);
-}
-
+/* Read TSC counter. Below are Some useful settings in /proc/cpuinfo *
+ * 1) CONSTANT_TSC                                                   *
+ * = indicates TSC runs at constant freq irrespective of P/T-states  *
+ * 2) NONSTOP_TSC                                                    *
+ * = indicates that TSC does not stop in deep C-states.              *
+ * 3) INVARIANT_TSC                                                  *
+ * = TSC will run at a constant rate in all ACPI P-, C-. and T-states*
+ * INVARIANT is the best mode and with this TSC can be used for wall *
+ * clock timer services per socket.                                  *
+ * Note: Ideally Pre-emption must be disabled (preempt_disable()) and*
+ * Hardware Interrupts must be disabled (raw_local_irq_save()) to    *
+ * guarantee exclusive ownership of the CPU when measuring #cycles   *
+ * Note: INVARIANT_TSC is applicable to only one socket. Cross-socket*
+ * synchronization is not implied as Synchronous RESET's have to be  *
+ * provided to both sockets for cross-socket invariant_tsc           *
+ * Note: RDTSC is not ordered, so, execution order is not guaranteed *
+ * Note: Invariant TSC update is not instantaneous (i.e., it does not*
+ * go up by 1 every cycle, so is not reliable to measure just a few  *
+ * instruction (few clock cycles)                                    */ 
 static inline uint64_t rdtsc(void)
 {
 	union {
@@ -92,6 +94,40 @@ static inline uint64_t rdtsc(void)
 	asm volatile ("rdtsc" :
 				 "=a" (tsc.lo_32),
 				 "=d" (tsc.hi_32));
+	return tsc.tsc_64;
+	//return tsc.lo_32  | (((uint64_t )tsc.hi_32 ) << 32);
+}
+
+/* RDTSCP = Assembly instruction to read timestamp register while    *
+ * offering pseudo "serialization" by reading CPU identifier (CPUID) *
+ * Note: RDTSCP waits until all prev instructions have been executed *
+ * however, subsequent instructions may begin execution before the   *
+ * read operation is performed                                       *
+ * Practically RDTSCP has a higher overhead by itself, but alleviates*
+ * out of order instructions atleast those before the RDTSP.         *
+ * Reference: download.intel.com/embedded/software/IA/324264.pdf     *
+ * Note: Ideal measurement requires RDTSC+CPUID | code | RDTSCP+CPUID*
+ * Note: On virtualized environments, CPUID may trap to hypervisor   *
+ * making it costlier to use RDTSCP.                                 *
+ * Note: As per Akaros, LFENCE+RDTSC | code | RDTSCP+LFENCE is better*
+ * akaros.cs.berkeley.edu/lxr/akaros/kern/arch/x86/rdtsc_test.c      */
+static inline uint64_t rdtscp(int *chip, int *core)
+{
+	unsigned cpu;
+	union {
+		uint64_t tsc_64;
+		struct {
+			uint32_t lo_32;
+			uint32_t hi_32;
+		};
+	} tsc;
+	asm volatile ("rdtscp" :
+				  "=a" (tsc.lo_32),
+				  "=d" (tsc.hi_32),
+				  "=c" (cpu));
+
+	*chip = (cpu & 0xFFF000) >> 12;
+	*core = (cpu & 0xFFF);
 	return tsc.tsc_64;
 	//return tsc.lo_32  | (((uint64_t )tsc.hi_32 ) << 32);
 }

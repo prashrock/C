@@ -13,16 +13,21 @@ CMPXCHG_OBJS = \
 RDTSC_OBJS = \
 	$(COMMON_ROOT)/micro_benchmarks/rdtsc.o
 
+MMAP_OBJS = \
+	$(COMMON_ROOT)/micro_benchmarks/mmap_test.o
+
 DEPS = \
 	$(COMMON_ROOT)/utils/compiler_api.h \
 	$(COMMON_ROOT)/utils/scan_utils.h \
+	$(COMMON_ROOT)/utils/terminal_utils.h \
 	$(COMMON_ROOT)/utils/print_utils.h \
 	$(COMMON_ROOT)/utils/multi_thread.h \
 	$(COMMON_ROOT)/utils/parser.h \
 	$(COMMON_ROOT)/utils/time_api.h \
 	$(COMMON_ROOT)/utils/atomic.h \
+	$(COMMON_ROOT)/utils/memory.h \
 
-OBJS = $(CMPXCHG_OBJS) $(RDTSC_OBJS)
+OBJS = $(CMPXCHG_OBJS) $(RDTSC_OBJS) $(MMAP_OBJS)
 
 #order is important to have dependencies work, declare DEPS before include
 include $(COMMON_ROOT)/bld/Makefile.common
@@ -37,6 +42,12 @@ cmpxchg: $(CMPXCHG_OBJS)
 	@echo "--------------------------------------------------"
 
 readtsc: $(RDTSC_OBJS)
+	@echo "--------------------------------------------------"
+	@echo $@
+	$(CC) $(OPT) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	@echo "--------------------------------------------------"
+
+mmap_test: $(MMAP_OBJS)
 	@echo "--------------------------------------------------"
 	@echo $@
 	$(CC) $(OPT) $(CFLAGS) -o $@ $^ $(LDFLAGS)

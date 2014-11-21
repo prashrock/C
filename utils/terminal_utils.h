@@ -48,11 +48,22 @@ static inline void term_emphasized_print_str(const char str[])
 	term_control_seq_exec_api(emp_res);
 }
 
+/* Restore old terminal i/o settings */
+static inline void termios_reset(void)
+{
+	tcsetattr(0, TCSANOW, &old_term_attr);
+}
+
 /* Initialize new terminal i/o settings */
 static inline void termios_init(bool echo)
 {
-	/* grab old terminal i/o settings */
+	if ( !isatty(fileno(stdin)) ){
+		printf("Error: stdin is not from terminal\n");
+		return;
+	}
+	/* grab old terminal i/o settings and make sure it gets reset later */
 	tcgetattr(fileno(stdin), &old_term_attr);
+	atexit(termios_reset);
 	/* make new settings same as old settings */
 	new_term_attr = old_term_attr;
 	/* disable buffered i/o */
@@ -63,15 +74,9 @@ static inline void termios_init(bool echo)
 	else
 		new_term_attr.c_lflag &= ~ECHO;
 	new_term_attr.c_cc[VTIME] = 0;
-	new_term_attr.c_cc[VMIN] = 0;
+	new_term_attr.c_cc[VMIN] = 1;
 	/* apply these new terminal i/o settings now */
 	tcsetattr(fileno(stdin), TCSANOW, &new_term_attr);
-}
-
-/* Restore old terminal i/o settings */
-static inline void termios_reset(void)
-{
-	tcsetattr(0, TCSANOW, &old_term_attr);
 }
 
 /* Need to figure out a way to re-route TTY to current PTY session */

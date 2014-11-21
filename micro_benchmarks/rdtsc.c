@@ -15,7 +15,6 @@
 #include "time_api.h"              /* rdtsc() */
 
 #define LOOPS BILLION
-#define CPU   1
 uint64_t dummy_data;
 
 /* Create separate test-cases and avoid a function pointer         *
@@ -53,15 +52,16 @@ uint64_t measure_rdtscp(uint64_t loops)
 	struct tsc_api_t tsc;
 	uint64_t i;
 	uint64_t res;
-
+	int cpu, core;
+	
 	/* Prime TLB/Cache before going to the actual loop */
-	res = rdtscp(CPU);
+	res = rdtscp(&cpu, &core);
 
 	rt_measure_start(&time, true);
 	tsc_measure_start(&tsc);
 	
 	for (i = 0; i < loops; i++) {
-		res += rdtscp(CPU);
+		res += rdtscp(&cpu, &core);
 	}
 	
 	tsc_measure_end(&tsc);
@@ -73,13 +73,46 @@ uint64_t measure_rdtscp(uint64_t loops)
 	return i;
 }
 
+struct timespec dummy_ts;
+uint64_t measure_clock_gettime(uint64_t loops)
+{
+	struct time_api_t time;
+	struct tsc_api_t tsc;
+	uint64_t i;
+	int res;
+
+	/* Prime TLB/Cache before going to the actual loop */
+	res = clock_gettime(CLOCK_MONOTONIC_COARSE, &dummy_ts);
+
+	rt_measure_start(&time, true);
+	tsc_measure_start(&tsc);
+	
+	for (i = 0; i < loops; i++) {
+		res += clock_gettime(CLOCK_MONOTONIC_COARSE, &dummy_ts);
+	}
+	
+	tsc_measure_end(&tsc);
+	rt_measure_end(&time, true);
+	time_print_api(&time, "   Info: clockgettime");
+	rt_task_statistics(i, &time, &tsc);
+	
+	dummy_data = res;   /* Avoid "set but not used" warning */
+	return i;
+}
+
 int main()
 {
-	printf("\nMeasuring time taken for %llu loops of rdtsc():\n", LOOPS);
+	printf("\nMeasuring time taken for %llu loops of rdtsc():\n",
+		   LOOPS);
 	measure_rdtsc(LOOPS);
 
-	printf("\nMeasuring time taken for %llu loops of rdtscp():\n", LOOPS);
+	printf("\nMeasuring time taken for %llu loops of rdtscp():\n",
+		   LOOPS);
 	measure_rdtscp(LOOPS);
+
+	printf("\nMeasuring time taken for %llu loops of clockgettime():\n",
+		   LOOPS);
+	measure_clock_gettime(LOOPS);
 	return 0;
 }
 
