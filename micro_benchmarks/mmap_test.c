@@ -3,12 +3,13 @@
 #include "memory.h"                /* create_priv_anon_mem */
 #include "scan_utils.h"            /* getch() */
 
+char c;
+
 int main(int argc, char **argv)
 {
 	size_t size;
 	void *addr;
 	int page_size = REGULAR_PAGE_SIZE;
-	char c;
 	if(argc != 2){
 		printf("Usage : %s <size_MB>\n", argv[0]);
 		return -1;
