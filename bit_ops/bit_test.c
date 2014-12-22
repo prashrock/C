@@ -88,6 +88,7 @@ static void count_bits_set_test()
 	printf("Trailing zero count:\n");
 	printf("\tMethod1 count = %d\n", bit_ntz(x));
 	printf("\tMethod2 count = %d\n", bit_num_trailing_zeros2(x));
+	printf("Bit Parity = %u\n", bit_parity(x));
 }
 
 static void ispow2_test()

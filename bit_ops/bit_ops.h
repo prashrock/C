@@ -117,6 +117,19 @@ static inline int bit_population_count2(unsigned int n)
 	for(i = 0; n; i++) n &= (n - 1);
 	return i;
 }
+/* Hamming Weight approach to find parity                 *
+ * Returns '1' for odd-parity and '0' for even-parity     *
+ * Works for +/- integers                                 */
+static inline int bit_parity(unsigned int n)
+{
+	if(n == 0) return n;
+	n = (n & 0x55555555) ^ ((n >> 1) & 0x55555555); //Accumulate 1 bit
+	n = (n & 0x33333333) ^ ((n >> 2) & 0x33333333); //Accumulate 2 bits
+	n = (n & 0x0F0F0F0F) ^ ((n >> 4) & 0x0F0F0F0F); //Accumulate 4 bits
+	n = (n & 0x00FF00FF) ^ ((n >> 8) & 0x00FF00FF); //Accumulate 8 bits
+	n = (n & 0x0000FFFF) ^ ((n >>16) & 0x0000FFFF); //Accumulate 16 bits
+	return n;
+}
 /*  Similar to finding MSB. Works for +/- integers        */
 static inline int bit_num_leading_zeros(unsigned int n)
 {
