@@ -4,6 +4,7 @@
 #include <string.h>        /* strerror, stricmp */
 #include "parser.h"        /* Parser API */
 #include "multi_thread.h"  /* PThread helper  */
+#include "scan_utils.h"    /* input_integer()  */
 
 #define DQ_OBJ_TYPE char
 #define QUEUE_PRINT_TYPE(_data) printf("%c", (_data));
@@ -43,6 +44,27 @@ static void strrev_test()
 
 	my_strrev(dq_str->elems, len);
 	printf("Reverse String = '%s'\n", dq_str->elems);
+	dq_destroy(dq_str);
+}
+
+static void strrotate_test()
+{
+	dq_t *dq_str = dq_init();
+	int len, k;
+	char c;
+	printf("Enter the string to rotate(Press enter when done):\n");
+	while((c = getchar()) != '\n') dq_enq(dq_str, c);
+	dq_enq(dq_str, '\0');
+	len = dq_count(dq_str)-1;
+	printf("Enter the number of times to rotate the above string(Press enter when done):\n");
+	if(input_integer(&k) == false) {
+		printf("Error: Please enter a valid integer\n");
+		goto strrotate_test_end;
+	}
+	printf("Input '%s' has length = %d and will be rotated %d times\n", dq_str->elems, len, k);
+	str_rotate_right(dq_str->elems, k);
+	printf("Rotated String = '%s'\n", dq_str->elems);
+strrotate_test_end:
 	dq_destroy(dq_str);
 }
 
@@ -154,16 +176,17 @@ static void str_lcs_test()
 static void print_help_string()
 {
 	printf("\n\nPress Enter to exit or follow below commands\n");
-	printf("\t        ? - Print this text again\n");
-	printf("\t  strlen* - Calculate String Length\n");
-	printf("\t streven* - Check if Input String Length is Even/Odd\n");
-	printf("\t strtrim* - Trim lead/trail & inbetween extra spaces\n");
-	printf("\t strfind* - Find substring in bigger string\n");
-	printf("\t  strrev* - Reverse given String\n");
-	printf("\t wordrev* - Reverse words of given String\n");
-	printf("\t is_pali* - Check if a String is Palindrome\n");
-	printf("\t     lcs* - Longest Common Substring given 2 strings\n");
-	printf("\t NOTE - * CMDS take optional loop_count, eg strlen 2\n");
+	printf("\t         ? - Print this text again\n");
+	printf("\t   strlen* - Calculate String Length\n");
+	printf("\t  streven* - Check if Input String Length is Even/Odd\n");
+	printf("\t  strtrim* - Trim lead/trail & inbetween extra spaces\n");
+	printf("\t  strfind* - Find substring in bigger string\n");
+	printf("\t   strrev* - Reverse given String\n");
+	printf("\tstrrotate* - Rotate given String to right by 'k' positions\n");
+	printf("\t  wordrev* - Reverse words of given String\n");
+	printf("\t  is_pali* - Check if a String is Palindrome\n");
+	printf("\t      lcs* - Longest Common Substring given 2 strings\n");
+	printf("\t  NOTE - * CMDS take optional loop_count, eg strlen 2\n");
 }
 
 static void multi_char_CLI(const char *c)
@@ -195,6 +218,10 @@ static void multi_char_CLI(const char *c)
 	else if(strncmp(c, "strrev", strlen("strrev")) == 0)
 	{
 		while(lp--) strrev_test();
+	}
+	else if(strncmp(c, "strrotate", strlen("strrotate")) == 0)
+	{
+		while(lp--) strrotate_test();
 	}
 	else if(strncmp(c, "wordrev", strlen("wordrev")) == 0)
 	{

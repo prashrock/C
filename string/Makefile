@@ -17,6 +17,7 @@ DEPS = \
 	$(COMMON_ROOT)/utils/multi_thread.h \
 	$(COMMON_ROOT)/utils/parser.h \
 	$(COMMON_ROOT)/utils/compiler_api.h \
+	$(COMMON_ROOT)/utils/scan_utils.h \
 
 #order is important to have dependencies work, declare DEPS before include
 include $(COMMON_ROOT)/bld/Makefile.common

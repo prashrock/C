@@ -99,6 +99,16 @@ static inline void my_strrev(char * const buf, int len)
 		SWAP(buf[i], buf[len - 1 - i]);
 }
 
+/* Reverse a given char array with specific left/right bounds    *
+ * Note: Same logic can be extended to other datatypes           *
+ * Note: This is a wrapper around my_strrev()                    */
+static inline void
+my_strrev_with_bounds(char * const buf, int left, int right)
+{
+	if(right > left)
+		my_strrev(&buf[left], (right - left + 1));
+}
+
 /* Trim trailing spaces                                          *
  * Time Complexity  = O(n)                                       *
  * Space Complexity = O(1)                                       */
@@ -157,6 +167,28 @@ static inline int str_trim(char * const buf, int len)
 		len = j;            /* Update str length */
 	}
 	return len;
+}
+
+/* Rotate given array to the right by 'k' positions by removing  *
+ * right-most 'k' elements and adding them back to the left.     *
+ * To achieve rotation without using extra space, use the below  *
+ * approach from Programming Pearls:                             *
+ * (http://www.cs.bell-labs.com/cm/cs/pearls/)                   *
+ * a) Reverse the entire string                                  *
+ * b) Reverse from the beginning upto 'k-1' position             *
+ * c) Reverse from 'k' till the end of the string (n-1)          *
+ * Time Complexity = O(2n)                                       *
+ * Space Complexity = O(1)                                       */
+static inline void str_rotate_right(char * const buf, int k)
+{
+	int n = strlen(buf);
+	/* optimization 1 - Avoid rotations beyond String Length */
+	/* optimization 2 - Modulo also ensures that if k = n, no rotations done */
+	k = k % n;
+	if(k == 0) return;
+	my_strrev_with_bounds(buf, 0, n-1);
+	my_strrev_with_bounds(buf, 0, k-1);
+	my_strrev_with_bounds(buf, k, n-1);
 }
 
 /* Reverse words in char array and trim spaces                   *
