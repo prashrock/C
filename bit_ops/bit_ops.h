@@ -12,6 +12,8 @@
  *   (((int) (x | -x)) >> (WORDBITS - 1))                              *
  * = Generate 0 on success, 1 on failure (any err# x)                  *
  *   (((unsigned int) (x | -x)) >> (WORDBITS - 1))                     *
+ * = Implement Bitwise XOR(^) without using the ^ operator             *
+ *   (x ^ y) is the same as (~x & y) | (x & ~y)                        *
  * = Given 2's complement int (x,y), find minimum and maximum of both  *
  *   integers, without branch, assuming right shift extends sign bit   *
  *   Min(x, y) => x + ( ((y-x)>>(WORDBITS-1)) & (y-x) )                *
