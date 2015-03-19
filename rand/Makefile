@@ -12,7 +12,7 @@ RESERV_OBJS = \
 	$(COMMON_ROOT)/utils/parser.o \
 
 DEPS = \
-	$(COMMON_ROOT)/rand/rand.h \
+	$(COMMON_ROOT)/utils/rand_utils.h \
 	$(COMMON_ROOT)/utils/compiler_api.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \
 	$(COMMON_ROOT)/stack/dy_stack.h \

@@ -8,6 +8,28 @@
 #define REGULAR_PAGE_SIZE        (4 * 1024)
 #define HUGEPAGE_SIZE            (2 * 1024 * 1024)
 
+/* For explicit control into L1/L2/L3 cacheline, use prefetcht0/1/2 Assembly*/
+/* Prefetch memory at virtual address into CPU cache for read               */
+static inline void prefetch_for_read(const void *addr)
+{
+	/* __builtin_prefetch(addr, r/w, locality)                               *
+	 * r/w is a compile time constant:                                       *
+	 *   0  = Prefetch is preparing for read                                 *
+	 *   1  = Prefetch is preparing for write                                *
+	 * locality is a compile time constant:                                  *
+	 *   0  = Data has no temporal locality. Remove immediately after access *
+	 *   1/2= Low/Moderate degree of temporal locality                       *
+	 *   3  = High degree of temporal locality (left in all levels of cache) */
+	__builtin_prefetch(addr, 0, 3);
+}
+
+/* Prefetch memory at virtual address into CPU cache for write               */
+static inline void prefetch_for_write(const void *addr)
+{
+	/* __builtin_prefetch(addr, r/w, locality)                               */
+	__builtin_prefetch(addr, 1, 3);
+}
+
 /* Calculate number of pages required for a given chunk of memory */
 static inline unsigned int calc_num_pages(size_t size, int page_size)
 {

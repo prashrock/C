@@ -9,7 +9,6 @@
 #include "multi_thread.h"  /* PThread helper  */
 #include "print_utils.h"   /* print_int_array */
 #include "scan_utils.h"    /* input_integer */
-#include "rand.h"          /* get_rand_int()  */
 #include "string_api.h"    /* String utilities */
 #include "election.h"      /* Election API */
 

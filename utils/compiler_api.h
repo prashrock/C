@@ -50,4 +50,8 @@ static inline void print_matrix(const int n, const int m, int x[][m])
 	printf("\n");
 }
 
+static inline void block_api()
+{
+	while(1);
+}
 #endif //_COMPILER_API_MACROS_

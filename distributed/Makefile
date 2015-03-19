@@ -14,7 +14,7 @@ DIST_ELECT_OBJS = \
 
 DEPS = \
 	$(COMMON_ROOT)/distributed/election.h \
-	$(COMMON_ROOT)/rand/rand.h \
+	$(COMMON_ROOT)/utils/rand_utils.h \
 	$(COMMON_ROOT)/utils/compiler_api.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \
 	$(COMMON_ROOT)/stack/dy_stack.h \

@@ -9,7 +9,7 @@
 #include "multi_thread.h"  /* PThread helper  */
 #include "print_utils.h"   /* print_int_array */
 #include "scan_utils.h"    /* input_integer */
-#include "rand.h"          /* get_rand_int()  */
+#include "rand_utils.h"    /* get_rand_int()  */
 
 
 /* Get k random samples from a huge/infinite input stream       *
@@ -45,6 +45,7 @@ void reservoir_sample_test(const int n, const int k)
 int main()
 {
 	int n, k;
+	init_rand();
 	printf("Enter Number of elements in stream 'n' :\n");
 	if(input_integer(&n) == false) return 0;
 	printf("Enter Number of samples needed 'k' :\n");

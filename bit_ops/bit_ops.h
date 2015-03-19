@@ -23,7 +23,9 @@
  *   (a<b)?x=c:x=d => x = ( ( ((a-b) >> (WORDBITS-1)) & (c^d) ) ^ d)   *
  */
 
+#ifndef WORD_BIT
 #define WORD_BIT (CHAR_BIT * sizeof(unsigned int)) //32
+#endif
 #define HEXIFY_INT(_X_) 0x##_X_##U
 #define HEXIFY_LONG(_X_) 0x##_X_##LU
 /* This approach can only cover binary to int upto 0xFF */

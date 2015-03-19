@@ -1,6 +1,7 @@
 COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
+	dyn_maximum_subarray                                            \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
 	search_test union_find_test cmpxchg readtsc mmap_test
 .PHONY: all clean etags $(EXES)
@@ -29,6 +30,9 @@ dyn_fibonacci:
 	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 dyn_str_min_edit_dist:
+	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
+dyn_maximum_subarray:
 	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 tree_test:

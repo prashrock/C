@@ -10,7 +10,7 @@
 
 #include "string_api.h"       /* String utilities */
 #include "scan_utils.h"       /* input_integer */
-#include "rand_utils.h"       /* rand_int(), srand_cur_time()*/
+#include "rand_utils.h"       /* get_rand_int(), init_rand()*/
 #include "time_api.h"         /* rt_measure_start(), rt_measure_end() */
 
 #define DQ_OBJ_TYPE              int
@@ -69,7 +69,7 @@ static void rand_sort_test(int n, bool inprint, bool outprint)
 	while(dq_deq(dyq, &rand_val));
 	for(i = 0; i < n; i++)
 	{
-		rand_val = rand_int(n);
+		rand_val = get_rand_int_limit(n);
 		dq_enq(dyq, rand_val);
 		total += rand_val;
 	}

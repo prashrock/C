@@ -8,7 +8,7 @@
 #include "parser.h"           /* Parser API */
 
 #include "scan_utils.h"       /* input_integer */
-#include "rand_utils.h"       /* rand_int(), srand_cur_time()*/
+#include "rand_utils.h"       /* get_rand_int(), init_rand()*/
 #include "time_api.h"         /* rt_measure_start(), rt_measure_end() */
 #include "binary_search.h"    /* Binary Search API */
 
