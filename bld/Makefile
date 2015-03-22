@@ -1,5 +1,6 @@
 COMMON_ROOT = $(shell pwd)/..
 EXES = stack_test queue_test str_test math_test tree_test sort_test	\
+	heap_test                                                       \
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	dyn_maximum_subarray                                            \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
@@ -13,6 +14,9 @@ stack_test:
 
 queue_test:
 	@$(MAKE) -f $(COMMON_ROOT)/queue/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
+heap_test:
+	@$(MAKE) -f $(COMMON_ROOT)/heap/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 str_test:
 	@$(MAKE) -f $(COMMON_ROOT)/string/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
@@ -69,6 +73,7 @@ clean:
 	rm -f $(EXES) TAGS 
 	$(MAKE) -C $(COMMON_ROOT)/stack/       COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/queue/       COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/heap/        COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/string/      COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/math/        COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/sort/        COMMON_ROOT="$(COMMON_ROOT)" clean
