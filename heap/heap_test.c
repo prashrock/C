@@ -8,8 +8,8 @@
 #define  MAX_HEAP_IMPL
 #include "heap.h"          /* Dynamic Heap API */
 
-#define AUTO_MAX_ELEMS 500   /* Max #elements for auto test */
-#define AUTO_MAX_VALUE 100   /* Each element is between +/- 10 */
+#define AUTO_MAX_ELEMS 10   /* Max #elements for auto test */
+#define AUTO_MAX_VALUE 10   /* Each element is between +/- 10 */
 heap_t *hp;
 
 
@@ -26,18 +26,51 @@ static void print_help_string()
 	printf("\t  a - Assert Heap invariant\n");
 	printf("\t  t - Test heap with random input\n");
 	printf("\t  h - Insert 10 random elements via heapify\n");
+	printf("\t  s - Create random elements and do heap sort\n");
 }
 
 static void heap_and_heap_statistics_printer()
 {
 	printf("Printing Heap Elements:\n");
-	heap_print(hp);
+	heap_print(hp->keys, hp->n);
 	heap_print_stats(hp);
 }
 
-static void heap_auto_test()
+static void heap_sort_test()
 {
-	
+	int i, n = get_rand_int_limit(AUTO_MAX_ELEMS+1);
+	int arr[n+1];
+	int old_val = 0;
+	unsigned long sum = 0;
+	printf("Creating %d random numbers:\n", n);
+	for(i = 1; i <= n; i++) {
+		arr[i] = get_rand_int_limit(AUTO_MAX_VALUE*2+1)+(-AUTO_MAX_VALUE);
+		printf("%d, ", arr[i]);
+		sum += arr[i];
+	}
+	printf("\n--------------------------------------------\n");
+	heap_sort(arr, n);
+	printf("Validating Heap_sort output\n");
+	for(i = 1; i <= n; i++) {
+		int val = arr[i];
+		printf("%d, ", val);
+		if(i > 1 && CMP(val, old_val)) {
+			printf("\nError: Sort invariant broken - %d found before %d\n",
+				   old_val, val);
+			block_api();
+		}
+		sum  -= val;
+		old_val = val;
+	}
+	if(sum != 0) {
+		printf("\nError: sum(%lu) nonzero, heap gobbled something?\n", sum);
+		block_api();
+	}
+	printf("\n--------------------------------------------\n");
+}
+
+static void heap_auto_test()
+{	
 	unsigned long sum = 0;
 	int n, i, old_val = 0;
 	n = get_rand_int_limit(AUTO_MAX_ELEMS+1);
@@ -135,6 +168,10 @@ static void single_char_CLI(const char *c)
 	case 'h':
 		printf("%s - Heapify test(add 10 rand numbers):\n", HEAP_TYPE_STR);
 		heap_heapify_test(10);
+		break;
+	case 's':
+		printf("%s - Heap Sort Test:\n", HEAP_TYPE_STR);
+		heap_sort_test();
 		break;
 	case 'q':
 		exit(0);
