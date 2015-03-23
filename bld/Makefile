@@ -3,6 +3,7 @@ EXES = stack_test queue_test str_test math_test tree_test sort_test	\
 	heap_test                                                       \
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	dyn_maximum_subarray                                            \
+	div_conq_stock_min_max                                          \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
 	search_test union_find_test cmpxchg readtsc mmap_test
 .PHONY: all clean etags $(EXES)
@@ -38,6 +39,9 @@ dyn_str_min_edit_dist:
 
 dyn_maximum_subarray:
 	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
+div_conq_stock_min_max:
+	@$(MAKE) -f $(COMMON_ROOT)/divide_conquer/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 tree_test:
 	@$(MAKE) -f $(COMMON_ROOT)/tree/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
@@ -85,6 +89,7 @@ clean:
 	$(MAKE) -C $(COMMON_ROOT)/IPC/         COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/search/      COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/union_find/  COMMON_ROOT="$(COMMON_ROOT)" clean
+	$(MAKE) -C $(COMMON_ROOT)/divide_conquer/   COMMON_ROOT="$(COMMON_ROOT)" clean
 	$(MAKE) -C $(COMMON_ROOT)/micro_benchmarks/ COMMON_ROOT="$(COMMON_ROOT)" clean
 
 etags:
