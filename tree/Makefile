@@ -13,6 +13,7 @@ OBJS = \
 
 DEPS = \
 	$(COMMON_ROOT)/utils/compiler_api.h \
+	$(COMMON_ROOT)/utils/rand_utils.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \
 	$(COMMON_ROOT)/stack/dy_stack.h \
 	$(COMMON_ROOT)/utils/multi_thread.h \

@@ -91,6 +91,8 @@ static inline void bst_node_print_data_iterator(bst_node_t *x)
 {if(x)dq_iterator(x->data_q, dq_print_element);}
 static inline void print_bst_node_key(bst_node_t *x)
 {if(x)printf("%d\n", x->key);}
+static inline void print_bst_node_key_space(bst_node_t *x)
+{if(x)printf("%d  ", x->key);}
 static inline void print_bst_node_key_data(bst_node_t *x)
 {
 	if(!x) return;
@@ -388,6 +390,59 @@ static inline void bst_bfs_traversal_impl(bst_node_t *rt, void (*fn)
 	}
 	dq_destroy(bfs_traverse);
 }
+/* Do a level order traversal of a given tree but print every   *
+ * other level in reverse so that its like a snake traveral     *
+ * This is an iterative solution with below complexity:         *
+ * Time Complexity = O(n)                                       *
+ * Space Complexity = O(2^h) (h is the height(0 based))         *
+ * space complexity comes because max # nodes that each stack   *
+ * would have to hold = maximum possible number of leaf nodes   *
+ * Note: ignoring error checking as this is sample code and     *
+ * readability is MY desired characteristic                     */
+static inline void bst_spiral_traversal_impl(bst_node_t *rt, void (*fn)
+											 (bst_node_t *x), dq_t *dq)
+{
+	int key;
+	dstack_t *s1, *s2;
+	bst_node_t *x;
+	if(rt == NULL) return;   /* Empty BST, dont traverse        */
+	if(fn == NULL) return;   /* Empty traverse fn, nothing to do*/
+	s1 = dy_stack_init();    /* Right to Left push stack        */
+	s2 = dy_stack_init();    /* Left to Right push stack        */
+	dy_stack_push(s1, rt->key);
+	while(is_dy_stack_empty(s1) == false || is_dy_stack_empty(s2) == false)
+	{
+		/* S1 includes nodes added in a right to left order     *
+		 * therefore, if its children are pushed into a stack   *
+		 * in right to left order, by virtue of stack (LIFO)    *
+		 * those nodes can be accessed left to right            */
+		while(is_dy_stack_empty(s1) == false) {
+			dy_stack_pop(s1, &key);
+			x = bst_get_node_impl(rt, key);
+			fn(x);
+			/* Note: Right pushed before left, need error checks*/
+			if(x->right) dy_stack_push(s2, x->right->key);
+			if(x->left)  dy_stack_push(s2, x->left->key);
+		}
+		printf("\n"); /* One level is complete, print new-line  */
+		/* After above loop, s2 should now have all the elements*
+		 * and s1 will be empty. Go over nodes in left to right *
+		 * order and add any available children in a left-right *
+		 * order, at end of this loop by virtue of stack (LIFO) *
+		 * those nodes can be accessed from right to left       */
+		while(is_dy_stack_empty(s2) == false) {
+			dy_stack_pop(s2, &key);
+			x = bst_get_node_impl(rt, key);
+			fn(x);
+			/* Note: Left pushed before right, need error checks*/
+			if(x->left)  dy_stack_push(s1, x->left->key);
+			if(x->right) dy_stack_push(s1, x->right->key);
+		}
+		printf("\n"); /* One level is complete, print new-line  */
+	}
+	dy_stack_destroy(s1);
+	dy_stack_destroy(s2);
+}
 /*--------------------Internal Functions(End)--------------------*/
 /*--------------------API Functions(start)--------------------*/
 bst_t *bst_init()            {return bst_init_impl();}
@@ -471,6 +526,10 @@ bool bst_delete(bst_t *bst, int key)
 void bst_bfs_traversal(bst_t *bst, void (*fn)(bst_node_t *x), dq_t *dq)
 {
 	bst_bfs_traversal_impl(bst->root, fn, dq);
+}
+void bst_spiral_traversal(bst_t *bst, void (*fn)(bst_node_t *x), dq_t *dq)
+{
+	bst_spiral_traversal_impl(bst->root, fn, dq);
 }
 void bst_preorder_dfs_traversal(bst_t *bst, void (*fn)(bst_node_t *x))
 {

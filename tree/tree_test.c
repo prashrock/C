@@ -6,8 +6,10 @@
 #include "multi_thread.h"  /* PThread helper  */
 #include "string_api.h"    /* String utilities */
 #include "bst.h"           /* BST API */
+#include "rand_utils.h"    /* init_rand(), get_rand_int_limit() */
 bst_t *bst;
 
+#define MAX_RAND_KEY 10
 #define LP_CNT 1000
 static unsigned long enq_tot, deq_tot;
 void tree_test_thread(struct thread_args *x)
@@ -50,6 +52,7 @@ static void print_help_string()
 	printf("\t max- Print the maximum Key\n");
 	printf("\t rootkey           - Print Root key\n");
 	printf("\t bfs_print         - BFS Traversal of BST\n");
+	printf("\t spiral_print      - BFS:Level order spiral print of BST\n");
 	printf("\t preorder_print    - DFS:Pre-Order Traversal of BST\n");
 	printf("\t inorder_print     - DFS:In-Order Traversal of BST\n");
 	printf("\t postorder_print   - DFS:Post-Order Traversal of BST\n");
@@ -60,6 +63,7 @@ static void print_help_string()
 	printf("\t lcp <key1> <key2> - Print lowest common parent's key\n");
 	printf("\t floor <key>       - Print next smallest key\n");
 	printf("\t print_key <key>   - Print key + data given key\n");
+	printf("\t rand_insert<#key> - Insert '#key' random keys\n");
 }
 
 /* Cannot pass bst_cpy to iterator fn, so keep static declaration     */
@@ -278,6 +282,12 @@ static void multi_char_CLI(const char *c)
 		bst_bfs_traversal(bst, print_bst_node_key, NULL);
 		printf("\n");
 	}
+	else if(strncmp(c, "spiral_print", strlen("spiral_print")) == 0)
+	{
+		printf("BFS Spiral Level-order Traversal of keys in BST:\n");
+		bst_spiral_traversal(bst, print_bst_node_key_space, NULL);
+		printf("\n");
+	}
 	else if(strncmp(c, "preorder_print", strlen("preorder_print")) == 0)
 	{
 		printf("Pre-Order Traversal of keys in BST:\n");
@@ -310,11 +320,31 @@ static void multi_char_CLI(const char *c)
 			key = atoi(space + 1);
 		print_bst_node_key_data(bst_get_node(bst, key));
 	}
+	else if(strncmp(c, "rand_insert", strlen("rand_insert")) == 0)
+	{
+		int i;
+		int num_keys = 0;
+		if((space = my_strstr_with_strlen(c, " ")))
+			num_keys = atoi(space + 1);
+		printf("Inserting %u random keys between (0 %d)\n",
+			   num_keys, MAX_RAND_KEY);
+		for(i = 0; i < num_keys; i++){
+			int key;
+			/* BST cannot handle duplicate nodes, so generate uniq rand */
+			do {
+				key = get_rand_int_limit(MAX_RAND_KEY);
+			} while(bst_get_node(bst, key));
+			if(bst_insert(bst, key, key) == false)
+				printf("Error: BST Insert %d failed. BST Full?\n", key);
+			printf("Info: Inserted %d into BST\n", key);
+		}
+	}
 }
 
 int main()
 {
-	bst=bst_init();
+	bst = bst_init();
+	init_rand();
 	print_help_string();
 	handle_CLI(single_char_CLI, single_char_CLI_with_num, multi_char_CLI);
 	return 0;
