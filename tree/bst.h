@@ -443,6 +443,58 @@ static inline void bst_spiral_traversal_impl(bst_node_t *rt, void (*fn)
 	dy_stack_destroy(s1);
 	dy_stack_destroy(s2);
 }
+/* Do a level order traversal of a given tree but print levels  *
+ * from bottom to top (level by level)                          *
+ * This is an iterative solution with below complexity:         *
+ * Time Complexity = O(n)                                       *
+ * Space Complexity = O(n)                                      */
+static inline void bst_bottom_up_traversal_impl(bst_node_t *rt, void (*fn)
+												(bst_node_t *x), dq_t *dq)
+{
+	int key, level_size = 1, tree_size = bst_size_api(rt), idx = 0;
+	dstack_t *len_st;
+	int nodes[tree_size];    /* Hopefully, stack mem is enough  */
+	bst_node_t *x;
+	if(rt == NULL) return;   /* Empty BST, dont traverse        */
+	if(fn == NULL) return;   /* Empty traverse fn, nothing to do*/
+	len_st= dy_stack_init(); /* Init stack to store all lengths */
+	nodes[idx++] = rt->key;
+	dy_stack_push(len_st, level_size);
+	/* Do a level order traversal and populate nodes + lengths  */
+	while(idx < tree_size)
+	{
+		int i, cur_level_size = 0, base_idx = idx - level_size;
+		for(i = 0; i < level_size; i++)
+		{
+			key = nodes[base_idx + i];
+			x = bst_get_node_impl(rt, key);
+			if(x->left) {
+				nodes[idx++] = x->left->key;
+				cur_level_size++;
+			}
+			if(x->right) {
+				nodes[idx++] = x->right->key;
+				cur_level_size++;
+			}
+		}
+		/* the number of nodes in the level just processed      */
+		level_size = cur_level_size;
+		dy_stack_push(len_st, level_size);
+	}
+	/* For each level from back (STACK) dump all nodes in level */
+	while(is_dy_stack_empty(len_st) == false)
+	{
+		int num, i;
+		dy_stack_pop(len_st, &num); /* Skip error checks        */
+		idx -= num;
+		for(i = 0; i < num; i++) {
+			x = bst_get_node_impl(rt, nodes[idx+i]);
+			fn(x);
+		}
+		printf("\n");
+	}
+	dy_stack_destroy(len_st);
+}
 /*--------------------Internal Functions(End)--------------------*/
 /*--------------------API Functions(start)--------------------*/
 bst_t *bst_init()            {return bst_init_impl();}
@@ -530,6 +582,10 @@ void bst_bfs_traversal(bst_t *bst, void (*fn)(bst_node_t *x), dq_t *dq)
 void bst_spiral_traversal(bst_t *bst, void (*fn)(bst_node_t *x), dq_t *dq)
 {
 	bst_spiral_traversal_impl(bst->root, fn, dq);
+}
+void bst_bottom_up_traversal(bst_t *bst, void (*fn)(bst_node_t *x), dq_t *dq)
+{
+	bst_bottom_up_traversal_impl(bst->root, fn, dq);
 }
 void bst_preorder_dfs_traversal(bst_t *bst, void (*fn)(bst_node_t *x))
 {

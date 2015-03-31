@@ -9,7 +9,7 @@
 #include "rand_utils.h"    /* init_rand(), get_rand_int_limit() */
 bst_t *bst;
 
-#define MAX_RAND_KEY 10
+#define MAX_RAND_KEY 20
 #define LP_CNT 1000
 static unsigned long enq_tot, deq_tot;
 void tree_test_thread(struct thread_args *x)
@@ -53,6 +53,7 @@ static void print_help_string()
 	printf("\t rootkey           - Print Root key\n");
 	printf("\t bfs_print         - BFS Traversal of BST\n");
 	printf("\t spiral_print      - BFS:Level order spiral print of BST\n");
+	printf("\t inverse_print     - BFS:Level order bottom->top BST print\n");
 	printf("\t preorder_print    - DFS:Pre-Order Traversal of BST\n");
 	printf("\t inorder_print     - DFS:In-Order Traversal of BST\n");
 	printf("\t postorder_print   - DFS:Post-Order Traversal of BST\n");
@@ -63,7 +64,7 @@ static void print_help_string()
 	printf("\t lcp <key1> <key2> - Print lowest common parent's key\n");
 	printf("\t floor <key>       - Print next smallest key\n");
 	printf("\t print_key <key>   - Print key + data given key\n");
-	printf("\t rand_insert<#key> - Insert '#key' random keys\n");
+	printf("\t rand_insert <#key>- Insert '#key' random keys\n");
 }
 
 /* Cannot pass bst_cpy to iterator fn, so keep static declaration     */
@@ -286,6 +287,12 @@ static void multi_char_CLI(const char *c)
 	{
 		printf("BFS Spiral Level-order Traversal of keys in BST:\n");
 		bst_spiral_traversal(bst, print_bst_node_key_space, NULL);
+		printf("\n");
+	}
+	else if(strncmp(c, "inverse_print", strlen("inverse_print")) == 0)
+	{
+		printf("BFS Bottom-Up Level-order Traversal of keys in BST:\n");
+		bst_bottom_up_traversal(bst, print_bst_node_key_space, NULL);
 		printf("\n");
 	}
 	else if(strncmp(c, "preorder_print", strlen("preorder_print")) == 0)
