@@ -4,12 +4,16 @@
 #include <stdbool.h>       /* bool, true, false */
 #include <stdlib.h>        /* srand(), rand()  */
 #include <time.h>          /* get current time - time() */
+#include <sys/time.h>      /* gettimeofday() */
 #include <unistd.h>        /* getpid() */
 
 /* Include PID + current time for seed initialization */
 static inline void init_rand()
 {
-	srand((int)time(NULL) + (int)getpid());
+	struct timeval time;
+	gettimeofday(&time, NULL);
+	/* Multiply with a prime number */
+	srand((((time.tv_sec ^ getpid()) * 100003) + time.tv_usec));
 }
 
 static inline int get_rand_int()

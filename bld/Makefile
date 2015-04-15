@@ -1,6 +1,6 @@
 COMMON_ROOT = $(shell pwd)/..
-EXES = stack_test queue_test str_test math_test tree_test sort_test	\
-	heap_test                                                       \
+EXES = stack_test queue_test str_test math_test sort_test heap_test \
+	tree_test bit_tree_test                                         \
 	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
 	dyn_maximum_subarray                                            \
 	div_conq_stock_min_max                                          \
@@ -44,6 +44,9 @@ div_conq_stock_min_max:
 	@$(MAKE) -f $(COMMON_ROOT)/divide_conquer/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 tree_test:
+	@$(MAKE) -f $(COMMON_ROOT)/tree/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
+
+bit_tree_test:
 	@$(MAKE) -f $(COMMON_ROOT)/tree/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 bit_test:
