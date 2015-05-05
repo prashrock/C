@@ -11,11 +11,16 @@
 #define DQ_OBJ_TYPE char
 #define QUEUE_PRINT_TYPE(_data) printf("%c", (_data));
 #include "dy_queue.h"         /* Dynamic Queue API */
+#include "print_utils.h"      /* print_int_matrix */
 #include "math_fact.h"        /* Math Factorial   */
 #include "math_prime.h"       /* Math Prime  */
 #include "math_misc.h"        /* abs(), pow()  */
+#include "math_matrix.h"      /* Matrix functions */
+#include "math_permute.h"     /* Permutation functions */
 #include "string_api.h"       /* String utilities */
 #include "scan_utils.h"       /* input_integer */
+
+#define MAX_PERMUTATION_DIGITS 10
 
 /* Use a Dynamic Queue to handle input stream */
 static inline long input_long()
@@ -101,16 +106,51 @@ static void gcd_lcm_test()
 	printf("LCM of '%d' and '%d' = %d\n", x, y, lcm(x, y));
 }
 
+static void spiral_matrix_test(int n, int m)
+{
+	int mat[n][m];
+	printf("Generating a spiral matrix(%d x %d):\n", n, m);
+	create_spiral_matrix(n, m, mat);
+	print_int_matrix(n, m, mat);
+}
+
+static void spiral_matrix_test_wrapper()
+{
+	int n, m;
+	printf("Enter the Number of rows(n):\n");
+	input_integer(&n);
+	printf("Enter the Number of columns(m):\n");
+	input_integer(&m);
+	return spiral_matrix_test(n, m);
+}
+
+static void permutate_test()
+{
+	unsigned n;
+	char str1[MAX_PERMUTATION_DIGITS + 1];
+	char str2[MAX_PERMUTATION_DIGITS + 1];
+	printf("Enter the number/string to permutate:\n");
+	input_string(str1, sizeof(str1)-1);
+	strncpy(str2, str1, sizeof(str2)-1);
+	printf("1) Permutation without repetition:\n");
+	lexical_permute_no_replacement(str1, strlen(str1), NULL, true);
+	printf("\n2) Permutation with repetition:\n");
+	n = heap_permute(str2, strlen(str2), NULL, true);
+	printf("Total number of permutations = %d\n", n);
+}
+
 static void print_help_string()
 {
 	printf("\n\nPress Enter to exit or follow below commands\n");
-	printf("\t         ?  - Print this text again\n");
-	printf("\t       pow* - Calculate pow(x,y)\n");
-	printf("\t      fact* - Calculate n! and print # trailing zeros\n");
-	printf("\t       abs* - Print Absolute value of given +/- integer\n");
-	printf("\t testprime* - Test if inputted number is prime\n");
-	printf("\t primefact* - Print all prime factors of a number\n");
-	printf("\t   gcd_lcm* - Calculate LCM and GCD of 2 numbers\n");
+	printf("\t          ?  - Print this text again\n");
+	printf("\t        pow* - Calculate pow(x,y)\n");
+	printf("\t       fact* - Calculate n! and print # trailing zeros\n");
+	printf("\t        abs* - Print Absolute value of given +/- integer\n");
+	printf("\t  testprime* - Test if inputted number is prime\n");
+	printf("\t  primefact* - Print all prime factors of a number\n");
+	printf("\t    gcd_lcm* - Calculate LCM and GCD of 2 numbers\n");
+	printf("\t spiral_mat* - Generate a spiral matrix\n");
+	printf("\t  permutate* - Generate all permutations of given num\n");
 	printf("\t NOTE - * CMDS take optional loop_count, eg pow 2\n");
 }
 
@@ -147,6 +187,14 @@ static void multi_char_CLI(const char *c)
 	else if(strncmp(c, "gcd_lcm", strlen("gcd_lcm")) == 0)
 	{
 		while(lp--) gcd_lcm_test();
+	}
+	else if(strncmp(c, "spiral_mat", strlen("spiral_mat")) == 0)
+	{
+		while(lp--) spiral_matrix_test_wrapper();
+	}
+	else if(strncmp(c, "permutate", strlen("permutate")) == 0)
+	{
+		while(lp--) permutate_test();
 	}
 }
 

@@ -18,6 +18,7 @@ SUBSUM_OBJS = \
 DEPS = \
 	$(COMMON_ROOT)/utils/compiler_api.h \
 	$(COMMON_ROOT)/utils/scan_utils.h \
+	$(COMMON_ROOT)/utils/print_utils.h \
 	$(COMMON_ROOT)/utils/multi_thread.h \
 	$(COMMON_ROOT)/stack/dy_stack.h \
 	$(COMMON_ROOT)/queue/dy_queue.h \
@@ -25,6 +26,8 @@ DEPS = \
 	$(COMMON_ROOT)/math/math_fact.h \
 	$(COMMON_ROOT)/math/math_misc.h \
 	$(COMMON_ROOT)/math/math_prime.h \
+	$(COMMON_ROOT)/math/math_matrix.h \
+	$(COMMON_ROOT)/math/math_permute.h \
 
 OBJS = $(MATH_OBJS) $(SUBSUM_OBJS)
 
