@@ -128,7 +128,7 @@ static inline bool bst_node_get_key(bst_node_t *x, int *key)
 	}
 	else return false;
 }
-/*--------------------Helper Functions(End)--------------------*/
+/*----------------------Helper Functions(End)----------------------*/
 /*--------------------Internal Functions(Start)--------------------*/
 static inline bst_t *bst_init_impl()
 {
@@ -137,6 +137,11 @@ static inline bst_t *bst_init_impl()
 	memset(bst, 0, sizeof(bst_t));
 	return bst;
 }
+/* Assume that the current node’s value is k. Then for each node,*
+ * check if all nodes of left subtree contain values that are    *
+ * less than k. Also check if all nodes of right subtree contain *
+ * values that are greater than k. If all of the nodes satisfy   *
+ * this property, then it must be a BST.                         */
 static inline bool is_BST_impl(bst_node_t *x, int *min, int *max)
 {
 	if(x == NULL) return true;
