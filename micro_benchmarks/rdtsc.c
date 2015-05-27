@@ -100,6 +100,34 @@ uint64_t measure_clock_gettime(uint64_t loops)
 	return i;
 }
 
+struct timeval dummy_tv;
+uint64_t measure_gettimeofday(uint64_t loops)
+{
+	struct time_api_t time;
+	struct tsc_api_t tsc;
+	uint64_t i;
+	int res;
+
+	/* Prime TLB/Cache before going to the actual loop */
+	res = gettimeofday(&dummy_tv, NULL);
+
+	rt_measure_start(&time, true);
+	tsc_measure_start(&tsc);
+	
+	for (i = 0; i < loops; i++) {
+		res += gettimeofday(&dummy_tv, NULL);
+	}
+	
+	tsc_measure_end(&tsc);
+	rt_measure_end(&time, true);
+	
+	time_print_api(&time, "   Info: gettimeofday");
+	rt_task_statistics(i, &time, &tsc);
+	
+	dummy_data = res;   /* Avoid "set but not used" warning */
+	return i;
+}
+
 int main()
 {
 	printf("\nMeasuring time taken for %llu loops of rdtsc():\n",
@@ -113,6 +141,11 @@ int main()
 	printf("\nMeasuring time taken for %llu loops of clockgettime():\n",
 		   LOOPS);
 	measure_clock_gettime(LOOPS);
+
+	printf("\nMeasuring time taken for %llu loops of gettimeofday():\n",
+		   LOOPS);
+	measure_gettimeofday(LOOPS);
+	
 	return 0;
 }
 
