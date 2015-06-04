@@ -59,6 +59,7 @@ static void print_help_string()
 	printf("\t postorder_print   - DFS:Post-Order Traversal of BST\n");
 	printf("\t path_print        - DFS:Print all root to leaf paths\n");
 	printf("\t longest_path_print- DFS:Print longest root to leaf path\n");
+	printf("\t unbst_tree <#swap>- Invalidate BST prop with random swaps\n");
 	printf("\t add <key> <data>  - Use if data is diff from key\n");
 	printf("\t parent <key>      - Print immediate parent's key\n");
 	printf("\t lcp <key1> <key2> - Print lowest common parent's key\n");
@@ -210,6 +211,31 @@ static void multi_char_CLI(const char *c)
 			printf("Max key in BST = %d\n", key);
 		else
 			printf("No Max key found in BST, BST empty?\n");
+	}
+	else if(strncmp(c, "unbst_tree", strlen("unbst_tree")) == 0)
+	{
+		/* Note - this is not complete yet... */
+		int cnt, i;
+		int key_a, key_b;
+		bst_node_t *node_a, *node_b;
+		if((space = my_strstr_with_strlen(c, " ")))
+			cnt = atoi(space + 1);
+		for(i = 0; i < cnt; i++)
+		{
+			key_a = get_rand_int_limit(MAX_RAND_KEY);
+			key_b = get_rand_int_limit(MAX_RAND_KEY);
+			/* If either random keys do not exist or equal, retry */
+			if(bst_get_floor_key(bst, key_a, &key_a) == false ||
+			   bst_get_floor_key(bst, key_b, &key_b) == false ||
+			   key_a == key_b) {
+				if(i) i--;
+				continue;
+			}
+			node_a = bst_get_node(bst, key_a);
+			node_b = bst_get_node(bst, key_b);
+			node_a->key = key_b;
+			node_b->key = key_a;
+		}
 	}
 	else if(strncmp(c, "rootkey", strlen("rootkey")) == 0)
 	{
