@@ -14,9 +14,9 @@
 #include "dy_queue.h"      /* Dynamic Queue API */
 
 /* Question:
- * Given an array of integers which represent max # steps that  *
- * can be made from a given step, calculate the minimum number  *
- * of jumps to reach end of array                               */
+ * Given an array of integers where each integer represents the *
+ * maximum # steps that can be moved forward from a given step, *
+ * calculate the minimum number of jumps to reach end of array  */
 
 bool subset_sum(int set[], const int n, const int sum)
 {
