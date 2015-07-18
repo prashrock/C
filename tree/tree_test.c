@@ -215,7 +215,7 @@ static void multi_char_CLI(const char *c)
 	else if(strncmp(c, "unbst_tree", strlen("unbst_tree")) == 0)
 	{
 		/* Note - this is not complete yet... */
-		int cnt, i;
+		int cnt = 0, i;
 		int key_a, key_b;
 		bst_node_t *node_a, *node_b;
 		if((space = my_strstr_with_strlen(c, " ")))
@@ -253,7 +253,7 @@ static void multi_char_CLI(const char *c)
 	}
 	else if(strncmp(c, "parent", strlen("parent")) == 0)
 	{
-		int key, pk;
+		int key = 0, pk;
 		if((space = my_strstr_with_strlen(c, " ")))
 			key = atoi(space + 1);
 		if(bst_get_parent_key(bst, key, &pk))

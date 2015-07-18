@@ -19,7 +19,7 @@ static inline void create_spiral_matrix(int nrow, int ncol,
 
 	int left = 0, right = ncol-1, top = 0, bottom = nrow-1;
 	int val = 1;
-	memset(mat, 0, sizeof(mat)); /* Initialize matrix first */
+	memset(mat, 0, sizeof(int[nrow][ncol])); /* Initialize matrix first */
 	while(left <= right && top <= bottom)
 	{
 		int i;
