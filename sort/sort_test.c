@@ -78,6 +78,7 @@ static bool sort_test(bool inprint, bool outprint)
 	int n = dq_count(dyq);
 	const char *sname;
 
+	rt_measure_init(&ta);
 	if(outprint)     sname = sort_name[sort_type];
 	else             sname = NULL;
 					

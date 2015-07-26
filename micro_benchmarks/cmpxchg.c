@@ -28,6 +28,10 @@ uint64_t measure_unlocked_cmpxchg(uint64_t loops)
 	uint32_t data = 1;
 	uint32_t res = 0;
 
+	/* Init */
+	rt_measure_init(&time);
+	tsc_measure_init(&tsc);
+	
 	/* Prime TLB/Cache before going to the actual loop */
 	res = unlocked_cmpxchg(&data, 1, 1);
 	
@@ -41,7 +45,7 @@ uint64_t measure_unlocked_cmpxchg(uint64_t loops)
 	tsc_measure_end(&tsc);
 	rt_measure_end(&time, true);
 	time_print_api(&time, "   Info: Unlocked cmpxchg");
-	rt_task_statistics(i, &time, &tsc);
+	time_tsc_statistics_print(i, &time, &tsc);
 	
 	dummy_data = res;   /* Avoid "set but not used" warning */
 	return i;
@@ -55,6 +59,10 @@ uint64_t measure_locked_cmpxchg(uint64_t loops)
 	uint32_t data = 1;
 	uint32_t res = 0;
 
+	/* Init */
+	rt_measure_init(&time);
+	tsc_measure_init(&tsc);
+	
 	/* Prime TLB/Cache before going to the actual loop */
 	res = locked_cmpxchg(&data, 1, 1);
 
@@ -68,7 +76,7 @@ uint64_t measure_locked_cmpxchg(uint64_t loops)
 	tsc_measure_end(&tsc);
 	rt_measure_end(&time, true);
 	time_print_api(&time, "   Info: Locked cmpxchg");
-	rt_task_statistics(i, &time, &tsc);
+	time_tsc_statistics_print(i, &time, &tsc);
 	
 	dummy_data = res;   /* Avoid "set but not used" warning */
 	return i;

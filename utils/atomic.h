@@ -3,6 +3,10 @@
 
 #include <stdint.h>                /* uint32_t */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* ---------------------- Atomic Locks and Barriers ------------------ */
 /* Compiler barrier.                                                   *
  * Guarantees that operation reordering does not occur at compile time *
@@ -20,33 +24,35 @@
 //asm volatile(MPLOCKED "addl $0,(%%esp)" : : : "memory")
 
 static inline uint32_t unlocked_cmpxchg(uint32_t *dst, uint32_t old,
-										uint32_t new)
+										uint32_t neww)
 {
 	volatile uint32_t *ptr = (volatile uint32_t *)dst;
 	uint32_t ret;
 
 	asm volatile ("cmpxchgl %2, %1"
 				 : "=a" (ret), "+m" (*ptr)
-				 : "r" (new), "0" (old)
+				 : "r" (neww), "0" (old)
 				 : "memory");
 
 	return ret;
 }
 
 static inline uint32_t locked_cmpxchg(uint32_t *dst, uint32_t old,
-									  uint32_t new)
+									  uint32_t neww)
 {
 	volatile uint32_t *ptr = (volatile uint32_t *)dst;
 	uint32_t ret;
 
 	asm volatile ("lock; cmpxchgl %2, %1"
 				 : "=a" (ret), "+m" (*ptr)
-				 : "r" (new), "0" (old)
+				 : "r" (neww), "0" (old)
 				 : "memory");
 
 	return ret;
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif //_ATOMIC_H_

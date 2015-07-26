@@ -2,12 +2,13 @@
 #define _STR_HELPER_ALG__
 
 #include <stdio.h>
-#include <stdlib.h>  /* atoi  */
-#include <stdbool.h> /* bool, true, false */
-#include <ctype.h>   /* isspace */
-#include <string.h>  /* strncasecmp - case-insensitive strcmp*/
-#include <assert.h>  /* assert */
-#include "compiler_api.h" /* SWAP, print_matrix macro */
+#include <stdlib.h>  /* atoi                                     */
+#include <stdbool.h> /* bool, true, false                        */
+#include <ctype.h>   /* isspace                                  */
+#include <string.h>  /* strncasecmp - case-insensitive strcmp    */
+#include <assert.h>  /* assert                                   */
+#include "compiler_api.h" /* SWAP macro                          */
+#include "print_utils.h"  /* print_matrix                        */
 
 /* fflush() cannot be used for STDIN. Implementing a custom way  *
  * to flush STDIN when Application *KNOWS* that STDIN is not     *

@@ -27,6 +27,10 @@ uint64_t measure_rdtsc(uint64_t loops)
 	uint64_t i;
 	uint64_t res;
 
+	/* Init */
+	rt_measure_init(&time);
+	tsc_measure_init(&tsc);
+		
 	/* Prime TLB/Cache before going to the actual loop */
 	res = rdtsc();
 
@@ -40,7 +44,7 @@ uint64_t measure_rdtsc(uint64_t loops)
 	tsc_measure_end(&tsc);
 	rt_measure_end(&time, true);
 	time_print_api(&time, "   Info: rdtsc");
-	rt_task_statistics(i, &time, &tsc);
+	time_tsc_statistics_print(i, &time, &tsc);
 	
 	dummy_data = res;   /* Avoid "set but not used" warning */
 	return i;
@@ -53,6 +57,10 @@ uint64_t measure_rdtscp(uint64_t loops)
 	uint64_t i;
 	uint64_t res;
 	int cpu, core;
+
+	/* Init */
+	rt_measure_init(&time);
+	tsc_measure_init(&tsc);
 	
 	/* Prime TLB/Cache before going to the actual loop */
 	res = rdtscp(&cpu, &core);
@@ -67,7 +75,7 @@ uint64_t measure_rdtscp(uint64_t loops)
 	tsc_measure_end(&tsc);
 	rt_measure_end(&time, true);
 	time_print_api(&time, "   Info: rdtsc");
-	rt_task_statistics(i, &time, &tsc);
+	time_tsc_statistics_print(i, &time, &tsc);
 	
 	dummy_data = res;   /* Avoid "set but not used" warning */
 	return i;
@@ -81,6 +89,10 @@ uint64_t measure_clock_gettime(uint64_t loops)
 	uint64_t i;
 	int res;
 
+	/* Init */
+	rt_measure_init(&time);
+	tsc_measure_init(&tsc);
+	
 	/* Prime TLB/Cache before going to the actual loop */
 	res = clock_gettime(CLOCK_MONOTONIC_COARSE, &dummy_ts);
 
@@ -94,7 +106,7 @@ uint64_t measure_clock_gettime(uint64_t loops)
 	tsc_measure_end(&tsc);
 	rt_measure_end(&time, true);
 	time_print_api(&time, "   Info: clockgettime");
-	rt_task_statistics(i, &time, &tsc);
+	time_tsc_statistics_print(i, &time, &tsc);
 	
 	dummy_data = res;   /* Avoid "set but not used" warning */
 	return i;
@@ -108,6 +120,10 @@ uint64_t measure_gettimeofday(uint64_t loops)
 	uint64_t i;
 	int res;
 
+	/* Init */
+	rt_measure_init(&time);
+	tsc_measure_init(&tsc);
+	
 	/* Prime TLB/Cache before going to the actual loop */
 	res = gettimeofday(&dummy_tv, NULL);
 
@@ -122,7 +138,7 @@ uint64_t measure_gettimeofday(uint64_t loops)
 	rt_measure_end(&time, true);
 	
 	time_print_api(&time, "   Info: gettimeofday");
-	rt_task_statistics(i, &time, &tsc);
+	time_tsc_statistics_print(i, &time, &tsc);
 	
 	dummy_data = res;   /* Avoid "set but not used" warning */
 	return i;

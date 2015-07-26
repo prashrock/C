@@ -57,4 +57,21 @@ static inline void print_int_matrix(int n, int m, int mat[n][m])
 	printf("\n");
 }
 
+static inline void print_matrix(const int n, const int m, int x[][m])
+{
+	int i, j;
+	printf("\nR/C | ");
+	for(i = 0; i < m; i++)
+		printf("%4d ", i);
+	printf("\n---------------------------------------------------\n");
+	for (i = 0; i < n; i++)
+	{
+		printf("%4d | ", i);
+		for (j = 0; j < m; j++)
+			printf ("%4d ", x[i][j]);
+		printf("\n");
+	}
+	printf("\n");
+}
+
 #endif //_PRINT_UTILS_API_
