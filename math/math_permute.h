@@ -2,9 +2,9 @@
 #define _MATH_PERMUTE_
 #include <stdio.h>
 #include <stdbool.h>       /* bool, true, false */
-#include <stdlib.h>        /* atoi, qsort  */
-#include <limits.h>        /* ULONG_MAX */
-#include "compiler_api.h"  /* SWAP */
+#include <stdlib.h>        /* atoi, qsort       */
+#include <limits.h>        /* ULONG_MAX         */
+#include "compiler_api.h"  /* SWAP              */
 
 /* Qsort helper function */
 static inline int permute_char_comp(const void *a, const void *b)
@@ -16,8 +16,8 @@ static inline int permute_char_comp(const void *a, const void *b)
  * Note: this logic can handle repetitions correctly                  */
 static inline void get_next_permutation(char *value, int n)
 {
-	int i = n - 1; /* i tracks the smaller value                      */
-	int j = n;     /* j tracks the larger value                       */
+	int i = n - 1; /* i tracks the smaller value                  */
+	int j = n;     /* j tracks the larger value                   */
 	while(value[i-1] >= value[i])   i--;
 	while(value[j-1] <= value[i-1]) j--;
 	SWAP(value[i-1], value[j-1]);
@@ -66,8 +66,13 @@ static inline void lexical_permute_no_replacement(char *value, int n,
 	printf("Total number of permutations = %d\n", tot);
 }
 
-/* Heap permute: Permute input array with repetitions.                *
-  from: A.Levitin, Introduction to Design&Analysis of Algorithms(179) */
+/* Heap permute: Permute input array with repetitions.                 *
+ * from: A.Levitin, Introduction to Design&Analysis of Algorithms(179) *
+ * Number of permutations (without repetition) = nPn = n!              *
+ * Note: This algorithm does not differentiate between strings with    *
+ * repeating characters and strings without. Therefore, output         *
+ * permutations need not be unique                                     *
+ * Time complexity > O(n!)                                             */
 static inline unsigned heap_permute(char *value, int n,
 									void (*fn)(char *value), bool print)
 {
