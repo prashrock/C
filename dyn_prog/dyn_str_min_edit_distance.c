@@ -11,13 +11,19 @@
 #include "print_utils.h"   /* print_int_matrix */
 
 #define MAX_STR_LEN (40)
+const int add_cost = 1, del_cost = 1, sub_cost = 1;
 
 /* Given two strings, determine minimum number of operations    *
  * (insert, del, substitute) to change 1 string to other        *
- * Use Levenshtein distance, ins,del cost = 1, sub cost = 2     */
+ * Use Levenshtein distance, ins,del cost = 1, sub cost = 1     */
 
-/* Quadratic time and space complexity O(n*m)                   *
- * n = len(str1), m = len(str2)                                 *
+/**
+ * DP Approach to calculate the Levenstein Distance             *
+ * @param str1, n                                               *
+ *   First string and its length  (n = strlen(str1))            *
+ * @param str2, m                                               *
+ *   Second string and its length (m = strlen(str2))            *
+ * Quadratic time and space complexity O(n*m)                   *
  * Use Memoization + Tabulation to arrive at final #differences *
  * Use below recurrence:                                        *
  * M[i][j] =    (M[i-1][j] + 1  --Add/Delete                    *
@@ -50,10 +56,10 @@ unsigned int min_edit_distance(char str1[], int n, char str2[], int m)
 			else
 			{
 				/* Minimum of first 2 cases in add/delete  */
-				min = MIN((matrix[i-1][j] + 1), (matrix[i][j-1] + 1));
-				/* Minimum of first 2 cases of addd/del and 1st case of subst */
+				min = MIN((matrix[i-1][j] + add_cost), (matrix[i][j-1] + del_cost));
+				/* Minimum of first 2 cases of add/del and 1st case of subst */
 				/* To increase cost of substitute, change below */
-				min = MIN(min, (matrix[i-1][j-1] + 1));
+				min = MIN(min, (matrix[i-1][j-1] + sub_cost));
 				matrix[i][j] = min;
 			}
 		}
