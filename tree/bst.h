@@ -141,7 +141,11 @@ static inline bst_t *bst_init_impl()
  * check if all nodes of left subtree contain values that are    *
  * less than k. Also check if all nodes of right subtree contain *
  * values that are greater than k. If all of the nodes satisfy   *
- * this property, then it must be a BST.                         */
+ * this property, then it must be a BST.                         *
+ * Note: Duplicate keys are allowed (BST considered valid). If   *
+ * you want to disallow duplicate keys, use below comparison     *
+ *      if(min && x->key <= *min) return false;                  *
+ *      if(max && x->key >= *max) return false;                  */
 static inline bool is_BST_impl(bst_node_t *x, int *min, int *max)
 {
 	if(x == NULL) return true;
