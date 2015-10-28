@@ -29,7 +29,7 @@ bool setup_signal(int sig, void(*fn)(), int flags)
 static void unidirectional_stream_socket_sender()
 {
 	char c = 'h';
-	int csock = -1;
+	int csock = 0;
 	struct sockaddr_un saddr_st;
 
 	if(setup_signal(SIGPIPE, (void(*)())SIG_IGN, 0) == false) {
