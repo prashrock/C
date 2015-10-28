@@ -64,6 +64,7 @@ static void print_help_string()
 	printf("\t parent <key>      - Print immediate parent's key\n");
 	printf("\t lcp <key1> <key2> - Print lowest common parent's key\n");
 	printf("\t floor <key>       - Print next smallest key\n");
+	printf("\t ceil <key>        - Print next biggest key\n");
 	printf("\t print_key <key>   - Print key + data given key\n");
 	printf("\t rand_insert <#key>- Insert '#key' random keys\n");
 }
@@ -299,6 +300,19 @@ static void multi_char_CLI(const char *c)
 			printf("Floor key for '%d' = %d\n", key, floor_key);
 		else{
 			printf("No Floor found for '%d'\n", key);
+			printf("Possible reasons for this:\n");
+			printf("\tBST Empty, is Root Key or Key not found\n");
+		}
+	}
+		else if(strncmp(c, "ceil", strlen("ceil")) == 0)
+	{
+		int key = 0, ceil_key;
+		if((space = my_strstr_with_strlen(c, " ")))
+			key = atoi(space + 1);
+		if(bst_get_ceil_key(bst, key, &ceil_key))
+			printf("Ceil key for '%d' = %d\n", key, ceil_key);
+		else{
+			printf("No Ceil found for '%d'\n", key);
 			printf("Possible reasons for this:\n");
 			printf("\tBST Empty, is Root Key or Key not found\n");
 		}

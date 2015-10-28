@@ -226,15 +226,29 @@ static inline bst_node_t *bst_get_parent_node_impl(bst_node_t *x,
 	}
 	return parent;
 }
+/* Find the node immediately smaller than given node.               *
+ * Note: The given key may or may-not be present in the BST         */
 static inline bst_node_t *bst_get_floor_node_impl(bst_node_t *x, int key)
 {
 	if(x == NULL)          return NULL;
-	else if(x->key == key) return x->left;
-	else if(x->key > key)  return bst_get_floor_node_impl(x->left, key);
+	else if(x->key >= key) return bst_get_floor_node_impl(x->left, key);
 	/* If Current Key is less than user key, then two possibilities *
      * 1) Current node is the floor                                 *
 	 * 2) Floor resides on right-subtree. First scan right sub-tree */
 	bst_node_t *t = bst_get_floor_node_impl(x->right, key);
+	if(t)                  return t;
+	else                   return x;
+}
+/* Find the node immediately larger than given node                 *
+ * Note: The given key may or may-not be present in the BST         */
+static inline bst_node_t *bst_get_ceil_node_impl(bst_node_t *x, int key)
+{
+	if(x == NULL)          return NULL;
+	else if(x->key <= key) return bst_get_ceil_node_impl(x->right, key);
+	/* If x->key > key, then there are two possibilities            *
+     * 1) Current node is the ceil                                  *
+	 * 2) Ceil resides on left-subtree. First scan left sub-tree    */
+	bst_node_t *t = bst_get_ceil_node_impl(x->left, key);
 	if(t)                  return t;
 	else                   return x;
 }
@@ -559,6 +573,11 @@ bool bst_get_floor_key(bst_t *bst, int key, int *floor_key)
 {
 	bst_node_t *x =	bst_get_floor_node_impl(bst->root, key);
 	return bst_node_get_key(x, floor_key);
+}
+bool bst_get_ceil_key(bst_t *bst, int key, int *ceil_key)
+{
+	bst_node_t *x =	bst_get_ceil_node_impl(bst->root, key);
+	return bst_node_get_key(x, ceil_key);
 }
 bool bst_get_data(bst_t *bst, int key, dq_t **data_q)
 {

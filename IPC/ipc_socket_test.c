@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>          /* bool, true, false */
 #include <pthread.h>          /* Pthreads library */
+#include <errno.h>            /* errno            */
 #include <string.h>           /* memset */
 #include <sys/socket.h>       /* socket/bind sys_call */
 #include <sys/un.h>           /* AF_LOCAL/AF_UNIX socket - sockaddr_un */
@@ -13,12 +14,29 @@
 
 #define SOCK_ADDR  "/tmp/stream_sock"
 
+bool setup_signal(int sig, void(*fn)(), int flags)
+{
+	struct sigaction act;
+	act.sa_flags   = flags;
+	act.sa_handler = (void(*)(int))fn;
+	sigemptyset(&act.sa_mask);
+	act.sa_sigaction = (void(*)(int,siginfo_t*,void*))fn;
+	if( sigaction( sig, &act, 0 ) == -1 ) return false;
+	return true;
+}
+
 /* Client - Terminal where input is entered */
 static void unidirectional_stream_socket_sender()
 {
 	char c = 'h';
 	int csock;
 	struct sockaddr_un saddr_st;
+
+	if(setup_signal(SIGPIPE, (void(*)())SIG_IGN, 0) == false) {
+		printf("Error: Could not ignore SIGPIPE\n");
+		goto err_handle;
+	}
+	
 	if(create_unix_stream_socket(SOCK_ADDR, &csock, &saddr_st) == false)
 		goto err_handle;
 	if(connect_unix_stream_socket(csock, &saddr_st) == false)
@@ -33,6 +51,7 @@ static void unidirectional_stream_socket_sender()
 			continue;
 		if(send(csock, &c, sizeof(c), 0) <= 0) {
 			perror("Error - client send()::");
+			printf("Sender error %s\n",strerror(errno));
 			goto err_handle;
 		}
 	}
