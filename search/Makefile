@@ -38,6 +38,6 @@ LDFLAGS	+= -lrt
 search_test: $(OBJS)
 	@echo "--------------------------------------------------"
 	@echo $@
-	$(CC)  $(OPT) $(CFLAGS) $(LDFLAGS)  -o $@ $^
+	$(CC)  $(OPT) $(CFLAGS)  -o $@ $^ $(LDFLAGS)
 	@echo "--------------------------------------------------"
 
