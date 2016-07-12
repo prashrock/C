@@ -319,7 +319,7 @@ void time_tsc_statistics_print(uint64_t loop_cnt, struct time_api_t *time,
  * This number is typically very close to current CPU freq in Mhz found *
  * with 'dmidecode -t processor | grep Speed' command                   */
 int calc_num_cycles_per_us(int *cycles_per_us) {
-   struct timespec sleeptime = { 0 };
+   struct timespec sleeptime = { 0, 0 };
    struct timespec ts_start, ts_end;
 
    /* Set the sleep-time to 0.5 s in nanoseconds                        */
