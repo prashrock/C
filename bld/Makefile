@@ -1,8 +1,7 @@
 COMMON_ROOT = $(shell pwd)/..
-EXES = stack_test queue_test str_test math_test sort_test heap_test \
-	tree_test bit_tree_test                                         \
-	dyn_subset_sum dyn_fibonacci dyn_str_min_edit_dist bit_test     \
-	dyn_maximum_subarray                                            \
+EXES = stack_test queue_test str_test math_test sort_test heap_test     \
+	tree_test bit_tree_test   bit_test                              \
+	dyn_fibonacci 	dyn_maximum_subarray                            \
 	div_conq_stock_min_max                                          \
 	reservoir_rand_sample dist_elect_test ipc_socket_test           \
 	search_test union_find_test cmpxchg readtsc mmap_test
@@ -28,13 +27,7 @@ math_test:
 sort_test:
 	@$(MAKE) -f $(COMMON_ROOT)/sort/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
-dyn_subset_sum:
-	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
-
 dyn_fibonacci:
-	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
-
-dyn_str_min_edit_dist:
 	@$(MAKE) -f $(COMMON_ROOT)/dyn_prog/Makefile COMMON_ROOT="$(COMMON_ROOT)" $@
 
 dyn_maximum_subarray:

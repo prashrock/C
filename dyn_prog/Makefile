@@ -7,17 +7,11 @@ INCLUDES = \
 	-I $(COMMON_ROOT)/math	 \
 	-I $(COMMON_ROOT)/dyn_prog \
 
-DYN_SUBSUM_OBJS = \
-	$(COMMON_ROOT)/dyn_prog/dyn_subset_sum.o \
-	$(COMMON_ROOT)/utils/parser.o \
 
 DYN_FIB_OBJS = \
 	$(COMMON_ROOT)/dyn_prog/dyn_fibonacci.o \
 	$(COMMON_ROOT)/utils/parser.o \
 
-DYN_STR_MIN_EDIT_OBJS = \
-	$(COMMON_ROOT)/dyn_prog/dyn_str_min_edit_distance.o \
-	$(COMMON_ROOT)/utils/parser.o \
 
 DYN_MAX_SUBARRAY_OBJS = \
 	$(COMMON_ROOT)/dyn_prog/dyn_maximum_subarray.o \
@@ -43,19 +37,8 @@ OBJS = $(DYN_SUBSUM_OBJS) $(DYN_FIB_OBJS) $(DYN_STR_MIN_EDIT_OBJS) \
 include $(COMMON_ROOT)/bld/Makefile.common
 
 # cancel implicit program rule
-dyn_subset_sum: $(DYN_SUBSUM_OBJS)
-	@echo "--------------------------------------------------"
-	@echo $@
-	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
-	@echo "--------------------------------------------------"
 
 dyn_fibonacci: $(DYN_FIB_OBJS)
-	@echo "--------------------------------------------------"
-	@echo $@
-	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
-	@echo "--------------------------------------------------"
-
-dyn_str_min_edit_dist: $(DYN_STR_MIN_EDIT_OBJS)
 	@echo "--------------------------------------------------"
 	@echo $@
 	$(CC) $(OPT) $(CFLAGS) $(LDFLAGS) -o $@ $^
